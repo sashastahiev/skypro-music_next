@@ -1,4 +1,5 @@
 .centerblock__h2 {
+  color: white;
   font-style: normal;
   font-weight: 400;
   font-size: 64px;
@@ -29,6 +30,7 @@
 }
 .filter__button {
   /*composes: btn-text from '/src/UI/Button/button.module.css';*/
+  color: white;
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
