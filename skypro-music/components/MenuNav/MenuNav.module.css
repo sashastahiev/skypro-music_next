@@ -26,11 +26,15 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+  cursor: pointer;
 }
 
 .nav__menu {
-  display: block;
-  visibility: visible;
+  transform: scaleY(0);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  z-index: 1000;
 }
 
 .logo__image {
@@ -53,6 +57,7 @@
 .menu__item {
   padding: 5px 0;
   margin-bottom: 16px;
+  cursor: pointer;
 }
 
 .menu__link {
@@ -60,4 +65,26 @@
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
+}
+
+/* Анимация бургер-иконки при открытии */
+.burger__active .burger__line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger__active .burger__line:nth-child(2) {
+  opacity: 0;
+}
+
+.burger__active .burger__line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.menu__open {
+  transform: scaleY(1);
+  opacity: 1;
+  visibility: visible;
+}
+.menu__link:hover {
+  color: #007bff;
 }
