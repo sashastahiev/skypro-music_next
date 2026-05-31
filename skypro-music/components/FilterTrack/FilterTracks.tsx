@@ -12,7 +12,7 @@ export default function Filter() {
       setBlockList(state);
   };
   const [tracks,setTracks] = useState(data);
-  let listGenre: string[] = [...new Set(tracks.map(track => track.genre))];
+  let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
   let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
   let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
   return (
@@ -26,7 +26,7 @@ export default function Filter() {
           <div className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listAuthor.map((item) => (
-                <li className={styles.itemList}>{item}</li>
+                <li className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -37,7 +37,7 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listYear.map((item) => (
-                <li className={styles.itemList}>{item}</li>
+                <li className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -48,7 +48,7 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listGenre.map((item) => (
-                <li className={styles.itemList}>{item}</li>
+                <li className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}

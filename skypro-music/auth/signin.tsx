@@ -11,7 +11,7 @@ export default function Signin() {
                         <form className={styles.modal__form}>
                             <a href="/music/main">
                                 <div className={styles.modal__logo}>
-                                    <img src="/img/logo_modal.png" alt="logo" />
+                                    <Image src="/img/logo_modal.png" alt="logo" />
                                 </div>
                             </a>
                             <input

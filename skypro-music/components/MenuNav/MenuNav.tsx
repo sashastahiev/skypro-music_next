@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from './MenuNav.module.css';
-
+import Image from 'next/image';
 export default function MenuNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -14,7 +14,7 @@ export default function MenuNav() {
     <>
       <nav className={styles.main__nav}>
         <div className={styles.nav__logo}>
-          <img
+          <Image
             width={250}
             height={170}
             src='/image/logo.png'

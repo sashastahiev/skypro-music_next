@@ -1,3 +1,5 @@
+'use client'
+import Image from 'next/image';
 import styles from './Sibebar.module.css'
 export default function Sibebar() {
   return (
@@ -15,7 +17,7 @@ export default function Sibebar() {
             <div className={styles.sidebar__list}>
             <div className={styles.sidebar__item}>
                 <a className={styles.sidebar__link} href="#">
-                <img
+                <Image
                     className={styles.sidebar__img}
                     src="/image/playlist01.png"
                     alt="day's playlist"
@@ -26,7 +28,7 @@ export default function Sibebar() {
             </div>
             <div className={styles.sidebar__item}>
                 <a className={styles.sidebar__link} href="#">
-                <img
+                <Image
                     className={styles.sidebar__img}
                     src="/image/playlist02.png"
                     alt="day's playlist"
@@ -37,7 +39,7 @@ export default function Sibebar() {
             </div>
             <div className={styles.sidebar__item}>
                 <a className={styles.sidebar__link} href="#">
-                <img
+                <Image
                     className={styles.sidebar__img}
                     src="/image/playlist03.png"
                     alt="day's playlist"
