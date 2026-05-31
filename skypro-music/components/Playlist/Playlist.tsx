@@ -20,7 +20,6 @@ export default function Playlist() {
             </div>
         </div>
         <div className={styles.content__playlist}>
-
             {tracks.map((item) => (
             <div className={styles.playlist__item} key={item._id}>
                 <div className={styles.playlist__track}>

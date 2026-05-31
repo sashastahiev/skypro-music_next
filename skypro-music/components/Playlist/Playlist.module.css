@@ -90,6 +90,11 @@
   width: 100%;
   display: block;
   margin-bottom: 12px;
+  cursor: pointer;
+}
+.playlist__item:hover{
+  background-color: #4e4e4e;
+  transition: 0.3s;
 }
 
 .playlist__track {

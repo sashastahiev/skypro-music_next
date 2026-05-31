@@ -48,7 +48,7 @@
 .filter__block {
   position: absolute;
   width: auto;
-  height: 305px;
+  max-height: 305px;
   background-color: #313131;
   color: white;
   padding: 34px;
