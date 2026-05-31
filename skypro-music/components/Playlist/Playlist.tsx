@@ -45,6 +45,7 @@ export default function Playlist() {
                             <svg className={styles.track__titleSvg}>
                             <use xlinkHref="/image/icon/sprite.svg#icon-note"></use>
                             </svg>
+                            {item.isPlaying && <div className={styles.pulsing_circle}></div>}
                         </div>
                         <div className={styles.track__title}>
                             <a className={styles.track__titleLink} href="">

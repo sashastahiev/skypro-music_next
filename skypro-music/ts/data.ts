@@ -13,6 +13,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Alexander_Nakarada_-_Chase.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 9,
@@ -26,6 +27,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Frank_Schroter_-_Open_Sea_epic.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 10,
@@ -39,6 +41,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Kevin_Macleod_-_Sneaky_Snitch.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 11,
@@ -52,6 +55,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Mixkit_-_Secret_Garden.mp3',
     stared_user: [],
+    isPlaying: false,
   },
 
   {
@@ -66,6 +70,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Musiclfiles_-_A_Journey_For_Successful_Winners.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 13,
@@ -79,6 +84,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Musiclfiles_-_Epic_Heroic_Conquest.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 14,
@@ -92,6 +98,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/musiclfiles_-_The_March_Of_The_Final_Battle.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 15,
@@ -105,6 +112,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Musiclfiles_-_True_Summer.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 16,
@@ -118,6 +126,7 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Waltz_Piano_-_Background_Sensible.mp3',
     stared_user: [],
+    isPlaying: false,
   },
   {
     _id: 17,
@@ -131,5 +140,6 @@ export const data: TrackType[] = [
     track_file:
       'https://webdev-music-003b5b991590.herokuapp.com/media/music_files/Winniethemoog_-_Action_Sport_Breakbeat.mp3',
     stared_user: [],
+    isPlaying: false,
   },
 ];

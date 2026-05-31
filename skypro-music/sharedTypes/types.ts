@@ -9,4 +9,5 @@ export type TrackType = {
     logo: null,
     track_file: string,
     stared_user: string[],
+    isPlaying: boolean,
 }

@@ -4,7 +4,7 @@ import Track from '../Track/Track';
 import styles from './BarTrack.module.css'
 import cn from 'classnames';
 import { useRef } from 'react';
-import { setIsPlay } from '@/store/features/trackSlice'
+import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice'
 export default function BarTrack() {
     const currentTrack = useAppSelector((state) => state.tracks.currentTrack)
     const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay)
