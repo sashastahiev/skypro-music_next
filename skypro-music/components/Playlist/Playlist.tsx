@@ -3,9 +3,26 @@ import styles from './Playlist.module.css'
 import cn from 'classnames';
 import { data } from '@/ts/data';
 import { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
+import { TrackType } from '@/sharedTypes/types';
+import audioRef from '@/components/BarTrack/BarTrack'
 
 export default function Playlist() {
   const [tracks, setTracks] = useState(data);
+  const isPlayTracInd = useAppSelector((state) => state.tracks.isPlay)
+  const dispatch = useAppDispatch();
+  function formatDuration(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+  const onClickTrack = (item: TrackType) => {
+    dispatch(setCurrentTrack(item));
+    if (isPlayTracInd){
+        dispatch(setIsPlay(false));
+    }
+  } 
   return (
     <>
     <div className={styles.centerblock__content}>
@@ -21,7 +38,7 @@ export default function Playlist() {
         </div>
         <div className={styles.content__playlist}>
             {tracks.map((item) => (
-            <div className={styles.playlist__item} key={item._id}>
+            <div onClick={() => onClickTrack(item)} className={styles.playlist__item} key={item._id}>
                 <div className={styles.playlist__track}>
                     <div className={styles.track__title}>
                         <div className={styles.track__titleImage}>
@@ -49,7 +66,7 @@ export default function Playlist() {
                         <svg className={styles.track__timeSvg}>
                             <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
                         </svg>
-                        <span className={styles.track__timeText}>{item.duration_in_seconds}</span>
+                        <span className={styles.track__timeText}>{formatDuration(item.duration_in_seconds)}</span>
                     </div>
                 </div>
             </div>

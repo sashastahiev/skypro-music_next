@@ -31,9 +31,9 @@ export default function Sibebar() {
                 <Image
                     className={styles.sidebar__img}
                     src="/image/playlist02.png"
-                    alt="day's playlist"
+                    alt="day's playlist"  
                     width={250}
-                    height={170}
+                    height={170}              
                 />
                 </a>
             </div>
