@@ -48,18 +48,18 @@ export default function Playlist() {
                             {item.isPlaying && <div className={styles.pulsing_circle}></div>}
                         </div>
                         <div className={styles.track__title}>
-                            <a className={styles.track__titleLink} href="">
+                            <a className={styles.track__titleLink} href="#">
                             {item.name} <span className={styles.track__titleSpan}></span>
                             </a>
                         </div>
                     </div>
                     <div className={styles.track__author}>
-                        <a className={styles.track__authorLink} href="">
+                        <a className={styles.track__authorLink} href="#">
                             {item.author}
                         </a>
                     </div>
                     <div className={styles.track__album}>
-                        <a className={styles.track__albumLink} href="">
+                        <a className={styles.track__albumLink} href="#">
                             {item.album}
                         </a>
                     </div>

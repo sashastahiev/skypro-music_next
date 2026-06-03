@@ -2,7 +2,7 @@ import { TrackType } from "@/sharedTypes/types";
 
 export const data: TrackType[] = [
   {
-    _id: 8,
+    _id: 0,
     name: 'Chase',
     author: 'Alexander Nakarada',
     release_date: '2005-06-11',
@@ -16,7 +16,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 9,
+    _id: 1,
     name: 'Open Sea epic',
     author: 'Frank Schroter',
     release_date: '2019-06-12',
@@ -30,7 +30,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 10,
+    _id: 2,
     name: 'Sneaky Snitch',
     author: 'Kevin Macleod',
     release_date: '2022-04-16',
@@ -44,7 +44,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 11,
+    _id: 3,
     name: 'Secret Garden',
     author: 'Mixkit',
     release_date: '1972-06-06',
@@ -59,7 +59,7 @@ export const data: TrackType[] = [
   },
 
   {
-    _id: 12,
+    _id: 4,
     name: 'A journey of successfull winners',
     author: '-',
     release_date: '1985-02-02',
@@ -73,7 +73,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 13,
+    _id: 5,
     name: 'Epic Heroic Conquest',
     author: '-',
     release_date: '1962-01-15',
@@ -87,7 +87,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 14,
+    _id: 6,
     name: 'The March OF The Final Battle',
     author: '-',
     release_date: '2011-11-02',
@@ -101,7 +101,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 15,
+    _id: 7,
     name: 'True Summer',
     author: '-',
     release_date: '2012-06-01',
@@ -115,7 +115,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 16,
+    _id: 8,
     name: 'Background Sensible',
     author: 'Waltz Piano',
     release_date: '2003-05-12',
@@ -129,7 +129,7 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
   {
-    _id: 17,
+    _id: 9,
     name: 'Cinematic',
     author: 'Winniethemoog',
     release_date: '2004-10-01',

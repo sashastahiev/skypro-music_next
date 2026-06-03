@@ -4,12 +4,14 @@ type initialStateType = {
   currentTrack: TrackType | null;
   isPlay: boolean,
   isLoop: boolean,
+  isShuffle: boolean,
 };
 
 const initialState: initialStateType = {
   currentTrack: null,
   isPlay: false,
   isLoop: false,
+  isShuffle: false,
 };
 
 const trackSlice = createSlice({
@@ -25,8 +27,11 @@ const trackSlice = createSlice({
     setIsLoop: (state, action: PayloadAction<boolean>) => {
       state.isLoop = action.payload;    
     }, 
+    setIsShuffle: (state, action: PayloadAction<boolean>) => {
+      state.isShuffle = action.payload;    
+    }, 
   },
 });
 
-export const { setCurrentTrack,  setIsPlay, setIsLoop} = trackSlice.actions;
+export const { setCurrentTrack, setIsPlay, setIsLoop, setIsShuffle} = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;
