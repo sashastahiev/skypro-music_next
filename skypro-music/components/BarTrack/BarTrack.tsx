@@ -4,13 +4,17 @@ import Track from '../Track/Track';
 import styles from './BarTrack.module.css'
 import cn from 'classnames';
 import { useRef } from 'react';
-import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice'
+import { setCurrentTrack, setIsLoop, setIsPlay } from '@/store/features/trackSlice'
 export default function BarTrack() {
     const currentTrack = useAppSelector((state) => state.tracks.currentTrack)
     const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay)
+    const isLooptrack = useAppSelector((state) => state.tracks.isLoop)
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const dispatch = useAppDispatch()
-    const playTrack = () => {
+    const toogleIsLoop = () => {
+        dispatch(setIsLoop(!isLooptrack))
+    }
+    const togglePlay = () => {
         if (audioRef.current && !isPlayTrackInd){
             audioRef.current.play()
             dispatch(setIsPlay(true))
@@ -25,7 +29,11 @@ export default function BarTrack() {
     return (
         <>
         <div className={styles.bar}>
-            <audio ref={audioRef} src={currentTrack.track_file} />
+            <audio 
+            ref={audioRef} 
+            src={currentTrack.track_file} 
+            loop={isLooptrack}
+            />
             <div className={styles.bar__content}>
                 <div className={styles.bar__playerProgress}></div>
                 <div className={styles.bar__playerBlock}>
@@ -36,7 +44,7 @@ export default function BarTrack() {
                         <use xlinkHref="/image/icon/sprite.svg#icon-prev"></use>
                         </svg>
                     </div>
-                    <div onClick={() => playTrack()} className={cn(styles.player__btnPlay, styles.btn)}>
+                    <div onClick={() => togglePlay()} className={cn(styles.player__btnPlay, styles.btn)}>
                         {!isPlayTrackInd ?
                         <svg className={styles.player__btnPlaySvg}>
                             <use xlinkHref="/image/icon/sprite.svg#icon-play"></use>
@@ -51,8 +59,8 @@ export default function BarTrack() {
                         <use xlinkHref="/image/icon/sprite.svg#icon-next"></use>
                         </svg>
                     </div>
-                    <div className={cn(styles.player__btnRepeat, styles.btnIcon)}>
-                        <svg className={styles.player__btnRepeatSvg}>
+                    <div onClick={toogleIsLoop}  className={cn(styles.player__btnRepeat, {[styles.btnIcon]: !isLooptrack})}>
+                        <svg className={!isLooptrack ? styles.player__btnRepeatSvg : styles.btnActive}>
                         <use xlinkHref="/image/icon/sprite.svg#icon-repeat"></use>
                         </svg>
                     </div>

@@ -258,6 +258,13 @@
   stroke: #ffffff;
   cursor: pointer;
 }
+.btnActive{
+  width: 18px;
+  height: 12px;
+  fill: transparent;
+  stroke: #ffffff;
+  cursor: pointer;
+}
 
 .btnIcon:active .trackPlay__likeSvg,
 .btnIcon:active .trackPlay__dislikeSvg {
