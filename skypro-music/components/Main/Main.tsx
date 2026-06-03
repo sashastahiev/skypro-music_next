@@ -3,7 +3,7 @@ import Filter from '@/components/FilterTrack/FilterTracks'
 import Playlist from '../Playlist/Playlist';
 import MenuNav from '../MenuNav/MenuNav';
 import Sibebar from '../Sibebar/Sibebar';
-
+import { AudioProvider } from '@/context/AudioContext';
 export default function Main() {
   return (
     <main className={styles.main}>
@@ -21,7 +21,9 @@ export default function Main() {
             />
             </div>
             <Filter />
-            <Playlist />
+            <AudioProvider>
+                <Playlist />
+            </AudioProvider>
         </div>
         <Sibebar />
     </main>

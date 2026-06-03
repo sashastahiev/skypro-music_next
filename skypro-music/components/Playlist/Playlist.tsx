@@ -1,27 +1,29 @@
 'use client'
 import styles from './Playlist.module.css'
 import cn from 'classnames';
-import { data } from '@/ts/data';
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
-import audioRef from '@/components/BarTrack/BarTrack'
+import {  useTrackData } from '@/ts/data';
+import { useAudio } from '@/context/AudioContext';
 
 export default function Playlist() {
-  const [tracks, setTracks] = useState(data);
-  const isPlayTracInd = useAppSelector((state) => state.tracks.isPlay)
   const dispatch = useAppDispatch();
+  const { audioRef } = useAudio();
+  const { tracks } = useTrackData();
   function formatDuration(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
   const onClickTrack = (item: TrackType) => {
+    await audioRef.current.load();
+      await new Promise(resolve => {
+        audioRef.current!.onloadeddata = resolve;
+      });
+      await audioRef.current.play();
     dispatch(setCurrentTrack(item));
-    if (isPlayTracInd){
-        dispatch(setIsPlay(false));
-    }
+    dispatch(setIsPlay(false));
   } 
   return (
     <>

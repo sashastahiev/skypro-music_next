@@ -1,6 +1,6 @@
 import { TrackType } from "@/sharedTypes/types";
-
-export const data: TrackType[] = [
+import { useState } from 'react';
+export let data: TrackType[] = [
   {
     _id: 0,
     name: 'Chase',
@@ -143,3 +143,14 @@ export const data: TrackType[] = [
     isPlaying: false,
   },
 ];
+export const useTrackData = () => {
+  const [tracks, setTracks] = useState<TrackType[]>(data);
+
+  const updateTrackPlaying = (trackId: number, isPlaying: boolean) => {
+    setTracks(prev => prev.map(track =>
+      track._id === trackId ? { ...track, isPlaying } : track
+    ));
+  };
+
+  return { tracks, updateTrackPlaying };
+};
