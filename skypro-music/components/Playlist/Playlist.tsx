@@ -17,11 +17,6 @@ export default function Playlist() {
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
     }
   const onClickTrack = (item: TrackType) => {
-    await audioRef.current.load();
-      await new Promise(resolve => {
-        audioRef.current!.onloadeddata = resolve;
-      });
-      await audioRef.current.play();
     dispatch(setCurrentTrack(item));
     dispatch(setIsPlay(false));
   } 
