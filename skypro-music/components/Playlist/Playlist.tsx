@@ -12,14 +12,10 @@ export default function Playlist() {
   const dispatch = useAppDispatch();
   const { playTrack, stopTrack } = useAudio();
   const { tracks } = useTrackData();
-  const { circleActive, isPlayCircle } = useAudio();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
+  const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   // Состояние для отслеживания загрузки
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleClick = (item: TrackType) => {
-    onClickTrack(item);
-    circleActive(item._id);
-  };
   function formatDuration(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -28,16 +24,13 @@ export default function Playlist() {
   const onClickTrack = async (item: TrackType) => {
     // Если уже идёт обработка другого трека — выходим
     if (isLoading) return;
-
     // Устанавливаем ID текущего трека как загружаемого
     setIsLoading(true);
-
     try {
       // Останавливаем текущий трек, если он есть
       if (currentTrack) {
         stopTrack();
       }
-
       // Устанавливаем новый трек
       await dispatch(setCurrentTrack(item));
       await dispatch(setIsPlay(true));
@@ -71,7 +64,7 @@ export default function Playlist() {
         <div className={styles.content__playlist}>
           {tracks.map((item) => (
             <div
-              onClick={() => handleClick(item)}
+              onClick={() => onClickTrack(item)}
               className={cn(
                 styles.playlist__item,
                 // Добавляем класс disabled, если трек загружается
@@ -89,7 +82,7 @@ export default function Playlist() {
                     <svg className={styles.track__titleSvg}>
               <use xlinkHref="/image/icon/sprite.svg#icon-note"></use>
             </svg>
-            {isPlayCircle[item._id] && <div className={styles.pulsing_circle}></div>}
+            {currentTrack?._id === item._id && <div className={isPlayTrackInd ? styles.pulsing_circle : styles.pulsing_circle_nonActive}></div>}
           </div>
           <div className={styles.track__title}>
             <a className={styles.track__titleLink} href="#">

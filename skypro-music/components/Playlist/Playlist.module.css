@@ -225,6 +225,13 @@
   background-color: #B672FF;
   animation: pulse 0.8s infinite;
 }
+.pulsing_circle_nonActive {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #B672FF;
+}
 .playlist__item_disabled {
   opacity: 0.6;
   cursor: not-allowed;

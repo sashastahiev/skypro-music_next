@@ -14,7 +14,7 @@ export default function BarTrack() {
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef, circleActive, isPlayCircle } = useAudio();
+  const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const { tracks } = useTrackData();
   const dispatch = useAppDispatch();
@@ -88,8 +88,6 @@ export default function BarTrack() {
     const nextTrack: TrackType = tracks[nextId];
     dispatch(setCurrentTrack(nextTrack));
     dispatch(setIsPlay(true));
-    await circleActiveTrack(nextId)
-    console.log(isPlayCircle)
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -102,16 +100,11 @@ export default function BarTrack() {
       dispatch(setIsPlay(false));
     }
   };
-  const circleActiveTrack = (id: number) => {
-    circleActive(id);
-  }
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
 
     let currentId = currentTrack._id;
     let prevId = (currentId - 1 + tracks.length) % tracks.length;
-    await circleActiveTrack(prevId);
-    console.log(isPlayCircle)
     const prevTrack: TrackType = tracks[prevId];
     dispatch(setCurrentTrack(prevTrack));
     dispatch(setIsPlay(true));
