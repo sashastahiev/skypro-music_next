@@ -14,9 +14,9 @@ export default function BarTrack() {
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef } = useAudio();
+  const { audioRef, circleActive, isPlayCircle } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
-  const { tracks, updateTrackPlaying } = useTrackData();
+  const { tracks } = useTrackData();
   const dispatch = useAppDispatch();
 
   const [progress, setProgress] = useState<number>(0);
@@ -37,16 +37,13 @@ export default function BarTrack() {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-
     const handleCanPlay = () => setIsLoading(false);
     const handleError = () => {
       setIsLoading(false);
       console.error('Ошибка загрузки аудиофайла:', currentTrack?.name);
     };
-
     audio.addEventListener('canplay', handleCanPlay);
     audio.addEventListener('error', handleError);
-
     return () => {
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('error', handleError);
@@ -62,7 +59,6 @@ export default function BarTrack() {
       }
     }
   };
-
   const handleProgressClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!audioRef.current || !progressBarRef.current) return;
 
@@ -77,10 +73,10 @@ export default function BarTrack() {
 
   const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
-
+    
     let currentId = currentTrack._id;
     let nextId: number;
-
+    
     if (isShuffleTrack) {
       do {
         nextId = Math.floor(Math.random() * tracks.length);
@@ -92,7 +88,8 @@ export default function BarTrack() {
     const nextTrack: TrackType = tracks[nextId];
     dispatch(setCurrentTrack(nextTrack));
     dispatch(setIsPlay(true));
-
+    await circleActiveTrack(nextId)
+    console.log(isPlayCircle)
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -105,17 +102,19 @@ export default function BarTrack() {
       dispatch(setIsPlay(false));
     }
   };
-
+  const circleActiveTrack = (id: number) => {
+    circleActive(id);
+  }
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
 
     let currentId = currentTrack._id;
     let prevId = (currentId - 1 + tracks.length) % tracks.length;
-
+    await circleActiveTrack(prevId);
+    console.log(isPlayCircle)
     const prevTrack: TrackType = tracks[prevId];
     dispatch(setCurrentTrack(prevTrack));
     dispatch(setIsPlay(true));
-
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -128,11 +127,9 @@ export default function BarTrack() {
       dispatch(setIsPlay(false));
     }
   };
-
   const toggleIsLoop = () => {
     dispatch(setIsLoop(!isLooptrack));
   };
-
   const togglePlay = async () => {
     if (!audioRef.current) return;
 
@@ -140,9 +137,6 @@ export default function BarTrack() {
       if (!isPlayTrackInd) {
         await audioRef.current.play();
         dispatch(setIsPlay(true));
-        if ( currentTrack && currentTrack._id !== undefined){
-            updateTrackPlaying(1, true)
-        }
       } else {
         audioRef.current.pause();
         dispatch(setIsPlay(false));

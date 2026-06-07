@@ -225,7 +225,15 @@
   background-color: #B672FF;
   animation: pulse 0.8s infinite;
 }
+.playlist__item_disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transition: opacity 0.3s ease;
+}
 
+.playlist__item:hover:not(.playlist__item_disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 @keyframes pulse {
   0% {
     transform: scale(1);

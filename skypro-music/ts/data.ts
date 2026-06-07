@@ -146,11 +146,11 @@ export let data: TrackType[] = [
 export const useTrackData = () => {
   const [tracks, setTracks] = useState<TrackType[]>(data);
 
-  const updateTrackPlaying = (trackId: number, isPlaying: boolean) => {
-    setTracks(prev => prev.map(track =>
-      track._id === trackId ? { ...track, isPlaying } : track
-    ));
-  };
+  // const updateTrackPlaying = (trackId: number, isPlaying: boolean) => {
+  //   setTracks(prev => prev.map(track =>
+  //     track._id === trackId ? { ...track, isPlaying } : track
+  //   ));
+  // };
 
-  return { tracks, updateTrackPlaying };
+  return { tracks };
 };
