@@ -1,4 +1,5 @@
 export type TrackType = {
+    id: number | 0,
     _id: number,
     name: string,
     author: string,

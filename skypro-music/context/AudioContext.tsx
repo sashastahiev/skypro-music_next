@@ -1,10 +1,9 @@
-// AudioContext.tsx
 'use client'
-import React, { createContext, useRef, useContext, useCallback, useState, useEffect } from 'react';
+import React, { createContext, useRef, useContext, useState, useEffect } from 'react';
 
 interface AudioContextType {
   audioRef: React.RefObject<HTMLAudioElement | null>;
-  playTrack: (src: string) => void;
+  playTrack: () => void;
   stopTrack: () => void;
 }
 
@@ -12,28 +11,20 @@ export const AudioContext = createContext<AudioContextType | null>(null);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const playTrack = useCallback((src: string) => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(src);
-    } else {
-      audioRef.current.src = src;
+  const playTrack = async () => {
+    if (!audioRef.current) return;
+    try {
+      await audioRef.current.play();
+    } catch (error) {
+      console.error('Ошибка при запуске трека:', error);
     }
-    audioRef.current
-      .play()
-      .then(() => {
-        console.log('Трек успешно запущен');
-      })
-      .catch((error) => {
-        console.error('Ошибка при запуске трека:', error);
-      });
-  }, []);
+  };
 
-  const stopTrack = useCallback(() => {
+  const stopTrack = () => {
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.currentTime = 0;
     }
-  }, []);
+  };
 
   return (
     <AudioContext.Provider value={{ audioRef, playTrack, stopTrack }}>

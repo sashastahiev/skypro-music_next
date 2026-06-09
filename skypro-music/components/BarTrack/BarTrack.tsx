@@ -5,7 +5,7 @@ import styles from './BarTrack.module.css';
 import cn from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { setCurrentTrack, setIsLoop, setIsPlay, setIsShuffle } from '@/store/features/trackSlice';
-import {  useTrackData } from '@/ts/data';
+import { useTrackData } from '@/ts/data';
 import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
 
@@ -14,7 +14,7 @@ export default function BarTrack() {
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef } = useAudio();
+  const { audioRef, playTrack, stopTrack } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const { tracks } = useTrackData();
   const dispatch = useAppDispatch();
@@ -31,24 +31,13 @@ export default function BarTrack() {
     }
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   }
-
-  const progressBarRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const handleCanPlay = () => setIsLoading(false);
-    const handleError = () => {
-      setIsLoading(false);
-      console.error('Ошибка загрузки аудиофайла:', currentTrack?.name);
-    };
-    audio.addEventListener('canplay', handleCanPlay);
-    audio.addEventListener('error', handleError);
-    return () => {
-      audio.removeEventListener('canplay', handleCanPlay);
-      audio.removeEventListener('error', handleError);
-    };
-  }, [currentTrack]);
+    if (audioRef.current && isPlayTrackInd)
+      audioRef.current.play();
+    else if (audioRef.current && !isPlayTrackInd)
+      audioRef.current.pause();
+  })
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   const handleTimeUpdate = () => {
     if (audioRef.current) {
@@ -71,10 +60,10 @@ export default function BarTrack() {
     audioRef.current.currentTime = Math.round((newProgress / 100) * audioRef.current.duration);
   };
 
-  const nextTrack = async () => {
+const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
     
-    let currentId = currentTrack._id;
+    let currentId = currentTrack.id;
     let nextId: number;
     
     if (isShuffleTrack) {
@@ -103,7 +92,7 @@ export default function BarTrack() {
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
 
-    let currentId = currentTrack._id;
+    let currentId = currentTrack.id;
     let prevId = (currentId - 1 + tracks.length) % tracks.length;
     const prevTrack: TrackType = tracks[prevId];
     dispatch(setCurrentTrack(prevTrack));
@@ -128,10 +117,12 @@ export default function BarTrack() {
 
     try {
       if (!isPlayTrackInd) {
-        await audioRef.current.play();
+        //await audioRef.current.play();
+        await playTrack();
         dispatch(setIsPlay(true));
       } else {
-        audioRef.current.pause();
+        await stopTrack();
+        //audioRef.current.pause();
         dispatch(setIsPlay(false));
       }
     } catch (error) {
@@ -153,15 +144,6 @@ export default function BarTrack() {
       await nextTrack();
     }
   };
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = 0.5;
-      if (volumeSliderRef.current) {
-        volumeSliderRef.current.value = '0.5';
-      }
-    }
-  }, []);
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(event.target.value);
     if (audioRef.current) {

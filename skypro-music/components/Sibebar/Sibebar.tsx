@@ -1,12 +1,13 @@
 'use client'
 import Image from 'next/image';
 import styles from './Sibebar.module.css'
+import Link from 'next/link';
 export default function Sibebar() {
   return (
     <>
     <div className={styles.main__sidebar}>
         <div className={styles.sidebar__personal}>
-            <p className={styles.sidebar__personalName}>Sergey.Ivanov</p>
+            <p className={styles.sidebar__personalName}>{localStorage.getItem('name') ? localStorage.getItem('name') : 'Sergey.Ivanov'}</p>
             <div className={styles.sidebar__icon}>
             <svg>
                 <use xlinkHref="/image/icon/sprite.svg#logout"></use>
@@ -16,7 +17,7 @@ export default function Sibebar() {
         <div className={styles.sidebar__block}>
             <div className={styles.sidebar__list}>
             <div className={styles.sidebar__item}>
-                <a className={styles.sidebar__link} href="#">
+                <Link className={styles.sidebar__link} href="/music/category/2">
                 <Image
                     className={styles.sidebar__img}
                     src="/image/playlist01.png"
@@ -24,10 +25,10 @@ export default function Sibebar() {
                     width={250}
                     height={170}
                 />
-                </a>
+                </Link>
             </div>
             <div className={styles.sidebar__item}>
-                <a className={styles.sidebar__link} href="#">
+                <Link className={styles.sidebar__link} href="/music/category/3">
                 <Image
                     className={styles.sidebar__img}
                     src="/image/playlist02.png"
@@ -35,10 +36,10 @@ export default function Sibebar() {
                     width={250}
                     height={170}              
                 />
-                </a>
+                </Link>
             </div>
             <div className={styles.sidebar__item}>
-                <a className={styles.sidebar__link} href="#">
+                <Link className={styles.sidebar__link} href="/music/category/4">
                 <Image
                     className={styles.sidebar__img}
                     src="/image/playlist03.png"
@@ -46,7 +47,7 @@ export default function Sibebar() {
                     width={250}
                     height={170}
                 />
-                </a>
+                </Link>
             </div>
             </div>
         </div>

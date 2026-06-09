@@ -6,44 +6,32 @@ import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useTrackData } from '@/ts/data';
 import { useAudio } from '@/context/AudioContext';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import BarTrack  from '@/components/BarTrack/BarTrack';
+import { AudioProvider } from '@/context/AudioContext';
+import { useParams } from 'next/navigation';
 export default function Playlist() {
   const dispatch = useAppDispatch();
-  const { playTrack, stopTrack } = useAudio();
-  const { tracks } = useTrackData();
+  const { playTrack } = useAudio();
+  const { tracks, updateTracks } = useTrackData();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
-  // Состояние для отслеживания загрузки
   const [isLoading, setIsLoading] = useState<boolean>(false);
   function formatDuration(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-  }
+  };
   const onClickTrack = async (item: TrackType) => {
-    // Если уже идёт обработка другого трека — выходим
     if (isLoading) return;
-    // Устанавливаем ID текущего трека как загружаемого
     setIsLoading(true);
     try {
-      // Останавливаем текущий трек, если он есть
-      if (currentTrack) {
-        stopTrack();
-      }
-      // Устанавливаем новый трек
-      await dispatch(setCurrentTrack(item));
-      await dispatch(setIsPlay(true));
-      if (currentTrack)
-
-      // Запускаем воспроизведение нового трека
-      if (item.track_file) {
-        playTrack(item.track_file);
-      }
+      dispatch(setCurrentTrack(item));
+      dispatch(setIsPlay(true));
+      await playTrack();
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
-      // Сбрасываем состояние загрузки после завершения
       setIsLoading(false);
     }
   };
@@ -70,7 +58,7 @@ export default function Playlist() {
                 // Добавляем класс disabled, если трек загружается
                 isLoading && styles.playlist__item_disabled
               )}
-              key={item._id}
+              key={item.id}
               // Блокируем взаимодействие через CSS pointer-events
               style={{
                 pointerEvents: isLoading ? 'none' : 'auto'
@@ -82,7 +70,7 @@ export default function Playlist() {
                     <svg className={styles.track__titleSvg}>
               <use xlinkHref="/image/icon/sprite.svg#icon-note"></use>
             </svg>
-            {currentTrack?._id === item._id && <div className={isPlayTrackInd ? styles.pulsing_circle : styles.pulsing_circle_nonActive}></div>}
+            {currentTrack?.id === item.id && <div className={isPlayTrackInd ? styles.pulsing_circle : styles.pulsing_circle_nonActive}></div>}
           </div>
           <div className={styles.track__title}>
             <a className={styles.track__titleLink} href="#">
@@ -111,6 +99,9 @@ export default function Playlist() {
   ))}
 </div>
 </div>
+<AudioProvider>
+  <BarTrack />
+</AudioProvider>
 </>
   );
 }

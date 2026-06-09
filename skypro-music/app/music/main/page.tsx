@@ -1,15 +1,14 @@
+'use client'
 import styles from './page.module.css';
-import Main  from '../components/Main/Main';
-import BarTrack  from '../components/BarTrack/BarTrack';
-import { AudioProvider } from '@/context/AudioContext';
+import Main from '@/components/Main/Main';
 export default function Home() {
+  if (!localStorage.getItem('name')){
+     window.location.href = '/auth/signin';
+  }
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <Main />
-        <AudioProvider>
-          <BarTrack />
-        </AudioProvider>
         <footer className={styles.footer}></footer>
       </div>
     </div>

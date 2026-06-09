@@ -1,7 +1,8 @@
 'use client'
 import { useState } from 'react';
 import styles from './FilterTracks.module.css';
-import { data } from '@/ts/data';
+import { useTrackData } from '@/ts/data';
+import { useParams } from 'next/navigation';
 export default function Filter() {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
@@ -11,7 +12,7 @@ export default function Filter() {
     else
       setBlockList(state);
   };
-  const [tracks,setTracks] = useState(data);
+  const {tracks} = useTrackData();
   let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
   let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
   let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
