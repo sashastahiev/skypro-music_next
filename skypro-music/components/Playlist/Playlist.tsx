@@ -6,7 +6,7 @@ import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useTrackData } from '@/ts/data';
 import { useAudio } from '@/context/AudioContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useParams } from 'next/navigation';
@@ -35,7 +35,26 @@ export default function Playlist() {
       setIsLoading(false);
     }
   };
+  const param = useParams();
+  const changeCategory = async () => {
+    const access =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkwOTcxMjcxLCJpYXQiOjE2OTA5NjAxMzEsImp0aSI6ImE4YzQ5NDNmOWNmNTRlZjI5NmFmNTMyOWUwODM4YWQ5IiwidXNlcl9pZCI6NzkyfQ.5n8YHTjsgAnYnc4gioyV1wPnxM2D16PS6c9kNhC-JoE";
 
+    const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${param.id}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access}`,
+      },
+    })
+    .then((response) => response.json())
+    // const newTracks = data.data.items.map((item: any) => tracks[item])
+    const idSet = new Set(data.data.items);
+
+    // Фильтруем объекты по условию: _id должен быть в массиве idsToFind
+    const filteredTracks = tracks.filter(track => idSet.has(track._id));
+    updateTracks(filteredTracks);
+  }
+  changeCategory();
   return (
     <>
       <div className={styles.centerblock__content}>
@@ -50,7 +69,7 @@ export default function Playlist() {
           </div>
         </div>
         <div className={styles.content__playlist}>
-          {tracks.map((item) => (
+          {tracks.map((item, index) => (
             <div
               onClick={() => onClickTrack(item)}
               className={cn(
@@ -58,7 +77,7 @@ export default function Playlist() {
                 // Добавляем класс disabled, если трек загружается
                 isLoading && styles.playlist__item_disabled
               )}
-              key={item.id}
+              key={index}
               // Блокируем взаимодействие через CSS pointer-events
               style={{
                 pointerEvents: isLoading ? 'none' : 'auto'
