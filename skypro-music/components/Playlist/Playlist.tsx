@@ -37,9 +37,7 @@ export default function Playlist() {
   };
   const param = useParams();
   const changeCategory = async () => {
-    const access =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjkwOTcxMjcxLCJpYXQiOjE2OTA5NjAxMzEsImp0aSI6ImE4YzQ5NDNmOWNmNTRlZjI5NmFmNTMyOWUwODM4YWQ5IiwidXNlcl9pZCI6NzkyfQ.5n8YHTjsgAnYnc4gioyV1wPnxM2D16PS6c9kNhC-JoE";
-
+    const access = localStorage.getItem('access')
     const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${param.id}/`, {
       method: "GET",
       headers: {
@@ -47,10 +45,7 @@ export default function Playlist() {
       },
     })
     .then((response) => response.json())
-    // const newTracks = data.data.items.map((item: any) => tracks[item])
     const idSet = new Set(data.data.items);
-
-    // Фильтруем объекты по условию: _id должен быть в массиве idsToFind
     const filteredTracks = tracks.filter(track => idSet.has(track._id));
     updateTracks(filteredTracks);
   }

@@ -94,12 +94,24 @@ export default function Signin() {
         console.log('Успех:', data.message);
       }
       localStorage.setItem('name',data.username)
+      const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.login,
+          password: formData.password
+        }),
+        headers: {
+          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+      localStorage.setItem('access',access.access);
       // Перенаправление после успешного входа
       window.location.href = '/music/main';
 
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
-
       if (error instanceof TypeError) {
         errorMessage = 'Ошибка сети: проверьте подключение к интернету';
       } else if (error instanceof SyntaxError) {
@@ -107,7 +119,6 @@ export default function Signin() {
       } else if (error instanceof Error) {
         errorMessage = error.message;
       }
-
       setError(errorMessage);
     } finally {
       setIsLoading(false);
