@@ -85,3 +85,18 @@
   text-decoration: underline;
   color:#B672FF;
 }
+.circleLength {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #B672FF;
+  border-radius: 50%;
+  right: -10px;
+  top: -10px;
+  font-weight: 500;
+  font-size: 13px;
+  color: white;
+}

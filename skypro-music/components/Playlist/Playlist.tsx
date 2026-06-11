@@ -10,6 +10,7 @@ import { useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useParams } from 'next/navigation';
+
 export default function Playlist() {
   const dispatch = useAppDispatch();
   const { playTrack } = useAudio();
@@ -17,6 +18,7 @@ export default function Playlist() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const namePlaylist = useAppSelector((state) => state.tracks.namePlaylist)
   function formatDuration(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -38,16 +40,75 @@ export default function Playlist() {
   const param = useParams();
   const changeCategory = async () => {
     const access = localStorage.getItem('access')
-    const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${param.id}/`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    })
-    .then((response) => response.json())
-    const idSet = new Set(data.data.items);
-    const filteredTracks = tracks.filter(track => idSet.has(track._id));
-    updateTracks(filteredTracks);
+    if (!isNaN(Number(param.id))){
+      const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${param.id}/`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access}`,
+        },
+      })
+      .then((response) => response.json())
+      const idSet = new Set(data.data.items);
+      const filteredTracks = tracks.filter(track => idSet.has(track._id));
+      updateTracks(filteredTracks);
+    }
+    else if (namePlaylist === 'Избранное'){
+        let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        },
+      })
+      .then((response) => response.json())
+      .then((json) => json.data);
+        data = data.map((item, index) => ({
+          ...item,
+          id: index,
+          isLike: true,
+        }));
+        updateTracks(data);
+    }
+  }
+  const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
+    e.stopPropagation()
+    const updatedItem = { ...item, isLike: !item.isLike };
+    updateTracks(tracks.map(track =>
+      track.id === item.id ? updatedItem : track
+    ));
+    if (updatedItem.isLike){
+      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${item._id}/favorite/`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          password: localStorage.getItem('password'),
+        }),
+        headers: {
+          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        },
+      })
+      if (response.ok) {
+        console.log('Успешно сохранено')
+      }
+    }
+    else {
+      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${item._id}/favorite/`, {
+        method: "DELETE",
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          password: localStorage.getItem('password'),
+        }),
+        headers: {
+          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        },
+      })
+      if (response.ok) {
+        console.log('Успешно удалено')
+      }
+    }
   }
   changeCategory();
   return (
@@ -103,8 +164,10 @@ export default function Playlist() {
           </a>
         </div>
         <div className={styles.track__time}>
-          <svg className={styles.track__timeSvg}>
-            <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
+          <svg onClick={(e) => {setIsLike(e,item)}} className={styles.track__timeSvg}>
+            {!item.isLike ? <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
+            : 
+            <use xlinkHref="/image/icon/LikeActive.svg"></use>}
           </svg>
           <span className={styles.track__timeText}>{formatDuration(item.duration_in_seconds)}</span>
         </div>

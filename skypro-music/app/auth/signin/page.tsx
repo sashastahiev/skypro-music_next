@@ -93,6 +93,8 @@ export default function Signin() {
         // Например, сервер может вернуть сообщение об успешной авторизации
         console.log('Успех:', data.message);
       }
+      localStorage.setItem('email', formData.login)
+      localStorage.setItem('password', formData.password)
       localStorage.setItem('name',data.username)
       const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
         method: "POST",
