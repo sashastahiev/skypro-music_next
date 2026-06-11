@@ -1,5 +1,4 @@
 import { TrackType } from "@/sharedTypes/types";
-import { useParams } from "next/navigation";
 import { useTrackData } from "./data";
 
 export const useApi = () => {
@@ -20,7 +19,6 @@ export const useApi = () => {
         return data;
     }
     const fetchTrackFavoriteAll = async () => {
-        const param = useParams();
         let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
             method: "GET",
             headers: {
@@ -36,7 +34,7 @@ export const useApi = () => {
         }));
         return data;
     }
-    const fetchTrackCategory = async (id: string) => {
+    const fetchTrackCategory = async (id: any) => {
         const { tracks } = useTrackData();
         const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
         method: "GET",
@@ -45,9 +43,71 @@ export const useApi = () => {
         },
       })
       .then((response) => response.json())
-      const idSet = new Set(data.data.items);
-      const filteredTracks = tracks.filter(track => idSet.has(track._id));
+      .then((json) => json.data.items);
+      const idSet = new Set(data);
+      const filteredTracks: TrackType[] = tracks.filter(track => idSet.has(track._id));
       return filteredTracks;
     }
-    return {fetchTracksAll, fetchTrackFavoriteAll, fetchTrackCategory}
+    const fetchTrackAdd = async (id: number) => {
+        const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          password: localStorage.getItem('password'),
+        }),
+        headers: {
+          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        },
+      })
+      if (response.ok) {
+        console.log('Успешно сохранено')
+      }
+    }
+    const fetchTrackDelete = async (id: number) => {
+        const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
+        method: "DELETE",
+        body: JSON.stringify({
+          email: localStorage.getItem('email'),
+          password: localStorage.getItem('password'),
+        }),
+        headers: {
+          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem('access')}`,
+        },
+      })
+      if (response.ok) {
+        console.log('Успешно удалено')
+      }
+    }
+    const fetchSignIn = async (login: string, password: string) => {
+        const response = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/login/", {
+        method: "POST",
+        body: JSON.stringify({
+          email: login,
+          password: password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response;
+    }
+    const fetchGetToken = async (login: string, password: string) => {
+        const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
+        method: "POST",
+        body: JSON.stringify({
+          email: login,
+          password: password
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        return access;
+    }
+    return {fetchTracksAll, fetchTrackFavoriteAll, fetchTrackCategory, fetchTrackAdd, fetchTrackDelete, fetchSignIn, fetchGetToken}
 }

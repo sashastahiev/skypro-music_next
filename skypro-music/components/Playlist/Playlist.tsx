@@ -10,10 +10,12 @@ import { useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useParams } from 'next/navigation';
+import { useApi } from '@/ts/api';
 
 export default function Playlist() {
   const dispatch = useAppDispatch();
   const { playTrack } = useAudio();
+  const {fetchTrackDelete, fetchTrackAdd, fetchTrackFavoriteAll, fetchTrackCategory} = useApi();
   const { tracks, updateTracks } = useTrackData();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
@@ -39,34 +41,13 @@ export default function Playlist() {
   };
   const param = useParams();
   const changeCategory = async () => {
-    const access = localStorage.getItem('access')
     if (!isNaN(Number(param.id))){
-      const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${param.id}/`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access}`,
-        },
-      })
-      .then((response) => response.json())
-      const idSet = new Set(data.data.items);
-      const filteredTracks = tracks.filter(track => idSet.has(track._id));
-      updateTracks(filteredTracks);
+      let data = await fetchTrackCategory(param.id);
+      updateTracks(data);
     }
     else if (namePlaylist === 'Избранное'){
-        let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('access')}`,
-        },
-      })
-      .then((response) => response.json())
-      .then((json) => json.data);
-        data = data.map((item, index) => ({
-          ...item,
-          id: index,
-          isLike: true,
-        }));
-        updateTracks(data);
+      let data = await fetchTrackFavoriteAll();
+      updateTracks(data);
     }
   }
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
@@ -76,38 +57,10 @@ export default function Playlist() {
       track.id === item.id ? updatedItem : track
     ));
     if (updatedItem.isLike){
-      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${item._id}/favorite/`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: localStorage.getItem('email'),
-          password: localStorage.getItem('password'),
-        }),
-        headers: {
-          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-          "content-type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem('access')}`,
-        },
-      })
-      if (response.ok) {
-        console.log('Успешно сохранено')
-      }
+      fetchTrackAdd(updatedItem._id)
     }
     else {
-      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${item._id}/favorite/`, {
-        method: "DELETE",
-        body: JSON.stringify({
-          email: localStorage.getItem('email'),
-          password: localStorage.getItem('password'),
-        }),
-        headers: {
-          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-          "content-type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem('access')}`,
-        },
-      })
-      if (response.ok) {
-        console.log('Успешно удалено')
-      }
+      fetchTrackDelete(updatedItem._id)
     }
   }
   changeCategory();
