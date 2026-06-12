@@ -1,24 +1,49 @@
 'use client'
-import { useAppDispatch } from '@/store/store';
+import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './page.module.css';
-import Main from '@/components/Main/Main';
+import Filter from '@/components/FilterTrack/FilterTracks';
+import { AudioProvider } from '@/context/AudioContext';
+import Playlist from '@/components/Playlist/Playlist';
+import Sibebar from '@/components/Sibebar/Sibebar';
+import { useAppDispatch } from '@/store/store';
 import { setNamePlaylist } from '@/store/features/trackSlice';
-
-export default function Favourite() {
+export default function Favorite() {
   const dispatch = useAppDispatch()
   const setPlaylist = () => {
     dispatch(setNamePlaylist('Избранное'))
   }
-  if (localStorage.getItem('access') === 'undefined'){
-     window.location.href = '/auth/signin';
+  if (localStorage?.getItem('access') === 'undefined'){
+      window.location.href = '/auth/signin';
   }
-  setPlaylist();
+  setPlaylist()
   return (
+    <>
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <Main />
+        <main className={styles.main}>
+          <MenuNav />
+          <div className={styles.centerblock}>
+              <div className={styles.centerblock__search}>
+              <svg className={styles.search__svg}>
+                  <use xlinkHref="/image/icon/sprite.svg#icon-search"></use>
+              </svg>
+              <input
+                  className={styles.search__text}
+                  type="search"
+                  placeholder="Поиск"
+                  name="search"
+              />
+              </div>
+              <Filter />
+              <AudioProvider>
+                  <Playlist id={'Избранное'}/>
+              </AudioProvider>
+          </div>
+          <Sibebar />
+        </main>
         <footer className={styles.footer}></footer>
       </div>
     </div>
+    </>
   );
 }

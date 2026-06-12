@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Signin() {
+  localStorage.setItem('access','undefined')
   const [formData, setFormData] = useState({
     login: '',
     password: ''
@@ -81,9 +82,7 @@ export default function Signin() {
         setIsLoading(false);
         return;
       }
-      // Парсим JSON только если статус успешный
       const data = await response.json();
-      // Дополнительная проверка данных от сервера
       if (data.error) {
         setError(data.error);
         setIsLoading(false);

@@ -22,13 +22,13 @@ let favoriteTrack: TrackType[] = await fetch("https://webdev-music-003b5b991590.
 })
 .then((response) => response.json())
 .then((json) => json.data);
-favoriteTrack = favoriteTrack.map((item, index) => ({
+favoriteTrack = favoriteTrack?.map((item, index) => ({
   ...item,
   id: index,
   isLike: true,
 }));
 data.forEach(item1 => {
-  const item2 = favoriteTrack.find((item) => item._id === item1._id);
+  const item2 = favoriteTrack?.find((item) => item._id === item1._id);
   if (item2 && item2.isLike === true) {
     item1.isLike = true;
   }

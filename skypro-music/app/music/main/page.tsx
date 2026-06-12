@@ -3,12 +3,13 @@ import { useAppDispatch } from '@/store/store';
 import styles from './page.module.css';
 import Main from '@/components/Main/Main';
 import { setNamePlaylist } from '@/store/features/trackSlice';
+
 export default function Home() {
   const dispatch = useAppDispatch()
-  const setPlaylist = async () => {
-    await dispatch(setNamePlaylist('Треки'))
+  const setPlaylist = () => {
+    dispatch(setNamePlaylist('Треки'))
   }
-  if (!localStorage.getItem('name')){
+  if (localStorage?.getItem('access') === 'undefined'){
      window.location.href = '/auth/signin';
   }
   setPlaylist()

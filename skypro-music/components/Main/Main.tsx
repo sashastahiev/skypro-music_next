@@ -22,7 +22,7 @@ export default function Main() {
             </div>
             <Filter />
             <AudioProvider>
-                <Playlist />
+                <Playlist id={'Треки'}/>
             </AudioProvider>
         </div>
         <Sibebar />
