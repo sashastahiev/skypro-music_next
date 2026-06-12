@@ -6,8 +6,8 @@ import { setNamePlaylist } from '@/store/features/trackSlice';
 
 export default function Favourite() {
   const dispatch = useAppDispatch()
-  const setPlaylist = async () => {
-    await dispatch(setNamePlaylist('Избранное'))
+  const setPlaylist = () => {
+    dispatch(setNamePlaylist('Избранное'))
   }
   if (localStorage.getItem('access') === 'undefined'){
      window.location.href = '/auth/signin';

@@ -6,7 +6,7 @@ import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useTrackData } from '@/ts/data';
 import { useAudio } from '@/context/AudioContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useParams } from 'next/navigation';
@@ -26,6 +26,7 @@ export default function Playlist() {
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
+  
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
     setIsLoading(true);
@@ -42,7 +43,7 @@ export default function Playlist() {
   const param = useParams();
   const changeCategory = async () => {
     if (!isNaN(Number(param.id))){
-      let data = await fetchTrackCategory(param.id);
+      let data = await fetchTrackCategory(Number(param.id));
       updateTracks(data);
     }
     else if (namePlaylist === 'Избранное'){
@@ -63,7 +64,6 @@ export default function Playlist() {
       fetchTrackDelete(updatedItem._id)
     }
   }
-  changeCategory();
   return (
     <>
       <div className={styles.centerblock__content}>

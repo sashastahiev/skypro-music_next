@@ -18,6 +18,12 @@ export default function Filter() {
   let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
   let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
   const namePlaylist = useAppSelector((state) => state.tracks.namePlaylist)
+  const setFilter = () => {
+    listGenre = [...new Set(tracks.flatMap(track => track.genre))];
+    listAuthor  = [...new Set(tracks.map(track => track.author))];
+    listYear = [...new Set(tracks.map(track => track.release_date))];
+  }
+  setFilter();
   const category = () => {
     const param = useParams();
     if (param.id === '4')
