@@ -11,7 +11,7 @@ export default function Home() {
     dispatch(setNamePlaylist('Треки'))
   }
   useEffect(() => {
-     if (localStorage.getItem('access') === 'undefined'){
+     if (!localStorage.getItem('access')){
      window.location.href = '/auth/signin';
     }
   })

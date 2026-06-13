@@ -4,7 +4,6 @@ import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay, setPlaylist } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
-import { useAudio } from '@/context/AudioContext';
 import { useEffect, useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
@@ -14,8 +13,8 @@ interface CategoryProps {
 }
 export default function Playlist({id}: CategoryProps) {
   const dispatch = useAppDispatch();
-  const { playTrack } = useAudio();
-  const [tracks, setTracks] = useState<TrackType[]>([]);
+  const playlist = useAppSelector(state => state.tracks.Playlist)
+  const [tracks, setTracks] = useState<TrackType[]>(playlist);
   const {fetchTrackDelete, fetchTrackAdd, fetchTrackFavoriteAll, fetchTrackCategory, fetchTracksAll} = useApi();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
@@ -32,7 +31,6 @@ export default function Playlist({id}: CategoryProps) {
     try {
       dispatch(setCurrentTrack(item));
       dispatch(setIsPlay(true));
-      playTrack();
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
@@ -62,7 +60,6 @@ export default function Playlist({id}: CategoryProps) {
     } else {
       data = await fetchTracksAll();
     }
-    dispatch(setPlaylist(data));
     setTracks(data);
     setIsLoading(false);
   };
@@ -71,6 +68,15 @@ export default function Playlist({id}: CategoryProps) {
   useEffect(() => {
     changeCategory();
   }, []);
+  const setPlaylistCategory = () => {
+    try {
+      dispatch(setPlaylist(tracks));
+    } catch {
+    }
+  }
+  useEffect(() => {
+    setPlaylistCategory();
+  },[tracks])
   return (
     <>
       <div className={styles.centerblock__content}>

@@ -2,7 +2,7 @@
 import styles from './signin.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function Signin() {
   const [formData, setFormData] = useState({

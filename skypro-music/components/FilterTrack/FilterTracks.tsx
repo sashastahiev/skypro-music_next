@@ -1,12 +1,18 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { useParams } from 'next/navigation';
 import { useAppSelector } from '@/store/store';
+import { TrackType } from '@/sharedTypes/types';
+import { useDispatch } from 'react-redux';
+import { setPlaylist } from '@/store/features/trackSlice';
 export default function Filter() {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
-  const tracks = useAppSelector((state) => state.tracks.Playlist);
+  const dispatch = useDispatch();
+  const playlist = useAppSelector((state) => state.tracks.Playlist)
+  const [tracksFilter,setTracksFilter] = useState<TrackType[]>([]);
+  const [tracks,setTracks] = useState<TrackType[]>(playlist);
   let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
   let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
   let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
@@ -17,6 +23,16 @@ export default function Filter() {
     else
       setBlockList(state);
   };
+  useEffect(() => {
+    setTracks(playlist);
+  },[playlist])
+  useEffect(() => {
+    try {
+      dispatch(setPlaylist(tracksFilter));
+    } catch {
+
+    }
+  },[tracksFilter])
   const category = () => {
     const param = useParams();
     if (param.id === '4')
@@ -28,6 +44,26 @@ export default function Filter() {
     else if (namePlaylist === 'Избранное')
       return namePlaylist
     return 'Треки'
+  }
+  const clickIlemList = (name: string | string[], category: string) => {
+    try {
+      let newTracks: TrackType[] = [];
+      if (category === 'author')
+      {
+        newTracks = tracks.filter(item => item.author === name)
+      }
+      if (category === 'year')
+      {
+        newTracks = tracks.filter(item => item.release_date === name)
+      }
+      if (category === 'genre')
+      {
+        newTracks = tracks.filter(item => item.genre === name)
+      }
+      setTracksFilter(newTracks);
+    } catch {
+      alert('Ошибка в фильтрации треков');
+    }
   }
   const [nameCategory, setCategory] = useState(category())
   return (
@@ -41,7 +77,7 @@ export default function Filter() {
           <div className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listAuthor.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => clickIlemList(item, 'author')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -53,7 +89,7 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listYear.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => clickIlemList(item, 'year')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -65,7 +101,7 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listGenre.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => clickIlemList(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}

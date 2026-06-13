@@ -31,12 +31,15 @@ export default function BarTrack() {
     }
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   }
+  const playStart = () => {
+    if (isPlayTrackInd)
+      audioRef?.current?.play();
+    else if (!isPlayTrackInd)
+      audioRef?.current?.pause();
+  }
   useEffect(() => {
-    if (audioRef.current && isPlayTrackInd)
-      audioRef.current.play();
-    else if (audioRef.current && !isPlayTrackInd)
-      audioRef.current.pause();
-  })
+    playStart();
+  },[isPlayTrackInd])
   const progressBarRef = useRef<HTMLDivElement>(null);
 
   const handleTimeUpdate = () => {

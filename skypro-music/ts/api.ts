@@ -1,149 +1,227 @@
 import { TrackType } from "@/sharedTypes/types";
-import { useEffect, useState } from "react";
 
 export const useApi = () => {
-  const [access, setAccess] = useState<string | null>('');
-  useEffect(() => {
-    const access2: string | null = localStorage?.getItem('access');
-      setAccess(access2);
-  })
-  const fetchTracksAll = async () => {
+  const fetchTracksAll = async (): Promise<TrackType[]> => {
+    try {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
-          method: "GET",
-          headers: {
-              Authorization: `Bearer ${access}`,
-          },
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
       })
-      .then((response) => response.json())
-      .then((json) => json.data);
+        .then((response) => response.json())
+        .then((json) => json.data);
+
       data = data.map((item, index) => ({
-          ...item,
-          id: index,
-          isLike: false,
+        ...item,
+        id: index,
+        isLike: false,
       }));
+
       let favoriteTrack: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
-          method: "GET",
-          headers: {
-          Authorization: `Bearer ${access}`,
-          },
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
       })
-      .then((response) => response.json())
-      .then((json) => json.data);
+        .then((response) => response.json())
+        .then((json) => json.data);
+
       favoriteTrack = favoriteTrack?.map((item, index) => ({
         ...item,
         id: index,
         isLike: true,
       }));
+
       data.forEach(item1 => {
         const item2 = favoriteTrack?.find((item) => item._id === item1._id);
         if (item2 && item2.isLike === true) {
           item1.isLike = true;
         }
       });
+
       return data;
-  }
-  const fetchTrackFavoriteAll = async () => {
+    } catch (error) {
+      console.log('Ошибка при получении всех треков:', error);
+      throw error;
+    }
+  };
+
+  const fetchTrackFavoriteAll = async (): Promise<TrackType[]> => {
+    try {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
-          method: "GET",
-          headers: {
-          Authorization: `Bearer ${access}`,
-          },
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
       })
-      .then((response) => response.json())
-      .then((json) => json.data);
+        .then((response) => response.json())
+        .then((json) => json.data);
+
       data = data.map((item, index) => ({
         ...item,
         id: index,
         isLike: true,
       }));
+
       return data;
-  }
-  const fetchTrackCategory = async (id: any) => {
+    } catch (error){
+      console.log(`Ошибка при получении избранных треков`, error);
+      window.location.href = '/auth/signin'
+      throw error;
+    }
+  };
+
+  const fetchTrackCategory = async (id: any): Promise<TrackType[]> => {
+    try {
       const tracks = await fetchTracksAll();
       const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    })
-    .then((response) => response.json())
-    .then((json) => json.data.items);
-    const idSet = new Set(data);
-    let filteredTracks: TrackType[] = tracks.filter(track => idSet.has(track._id));
-    filteredTracks = filteredTracks.map((item, index) => ({
-      ...item,
-      id: index,
-      isLike: false,
-    }));
-    let favoriteTrack = await fetchTrackFavoriteAll();
-    filteredTracks.forEach(item1 => {
-      const item2 = favoriteTrack.find(item => item._id === item1._id);
-      if (item2 && item2.isLike === true) {
-        item1.isLike = true;
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => json.data.items);
+
+      const idSet = new Set(data);
+      let filteredTracks: TrackType[] = tracks.filter(track => idSet.has(track._id));
+      filteredTracks = filteredTracks.map((item, index) => ({
+        ...item,
+        id: index,
+        isLike: false,
+      }));
+
+      let favoriteTrack: TrackType[] = await fetchTrackFavoriteAll();
+
+      filteredTracks.forEach(item1 => {
+        const item2 = favoriteTrack.find(item => item._id === item1._id);
+        if (item2 && item2.isLike === true) {
+          item1.isLike = true;
+        }
+      });
+
+      return filteredTracks;
+    } catch (error) {
+      console.log(`Ошибка при получении треков категории ${id}:`, error);
+      throw error;
+    }
+  };
+
+  const fetchTrackAdd = async (id: number): Promise<void> => {
+    try {
+      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
+        method: "POST",
+        body: JSON.stringify({
+          email: localStorage?.getItem('email'),
+          password: localStorage?.getItem('password'),
+        }),
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
+      });
+
+      if (response.ok) {
+        console.log('Успешно сохранено');
       }
-    });
-    return filteredTracks;
-  }
-  const fetchTrackAdd = async (id: number) => {
-      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
-      method: "POST",
-      body: JSON.stringify({
-        email: localStorage?.getItem('email'),
-        password: localStorage?.getItem('password'),
-      }),
-      headers: {
-        // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-        "content-type": "application/json",
-        Authorization: `Bearer ${access}`,
-      },
-    })
-    if (response.ok) {
-      console.log('Успешно сохранено')
+      if (!response.ok) {
+        // Обрабатываем разные коды ошибок
+        switch (response.status) {
+          case 401:
+            alert('Ошибка авторизации');
+            window.location.href = '/auth/signin'
+            break;
+          default:
+            alert(`Ошибка ${response.status}: проблема с авторизацией`);
+        }
+      }
+    } catch (error) {
+      console.log(`Ошибка при добавлении трека ${id} в избранное:`, error);
+      throw error;
     }
-  }
-  const fetchTrackDelete = async (id: number) => {
+  };
+
+  const fetchTrackDelete = async (id: number): Promise<void> => {
+    try {
       const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
-      method: "DELETE",
-      body: JSON.stringify({
-        email: localStorage?.getItem('email'),
-        password: localStorage?.getItem('password'),
-      }),
-      headers: {
-        // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-        "content-type": "application/json",
-        Authorization: `Bearer ${access}`,
-      },
-    })
-    if (response.ok) {
-      console.log('Успешно удалено')
+        method: "DELETE",
+        body: JSON.stringify({
+          email: localStorage?.getItem('email'),
+          password: localStorage?.getItem('password'),
+        }),
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        },
+      });
+
+      if (response.ok) {
+        console.log('Успешно удалено');
+      }
+      if (!response.ok) {
+        // Обрабатываем разные коды ошибок
+        switch (response.status) {
+          case 401:
+            alert('Ошибка авторизации');
+            window.location.href = '/auth/signin'
+            break;
+          default:
+            alert(`Ошибка ${response.status}: проблема с авторизацией`);
+        }
+      }
+    } catch (error) {
+      console.log(`Ошибка при удалении трека ${id} из избранного:`, error);
+      throw error;
     }
-  }
-  const fetchSignIn = async (login: string, password: string) => {
+  };
+
+  const fetchSignIn = async (login: string, password: string): Promise<Response> => {
+    try {
       const response = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/login/", {
-      method: "POST",
-      body: JSON.stringify({
-        email: login,
-        password: password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response;
-  }
-  const fetchGetToken = async (login: string, password: string) => {
+        method: "POST",
+        body: JSON.stringify({
+          email: login,
+          password: password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return response;
+    } catch (error) {
+      console.log('Ошибка при авторизации:', error);
+      throw error;
+    }
+  };
+
+  const fetchGetToken = async (login: string, password: string): Promise<any> => {
+    try {
       const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
-      method: "POST",
-      body: JSON.stringify({
-        email: login,
-        password: password
-      }),
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((response) => response.json())
+        method: "POST",
+        body: JSON.stringify({
+          email: login,
+          password: password
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => response.json());
       return access;
-  }
-  return {fetchTracksAll, fetchTrackFavoriteAll, fetchTrackCategory, fetchTrackAdd, fetchTrackDelete, fetchSignIn, fetchGetToken}
-}
+    } catch (error) {
+      console.log('Ошибка при получении токена:', error);
+      throw error;
+    }
+  };
+
+  return {
+    fetchTracksAll,
+    fetchTrackFavoriteAll,
+    fetchTrackCategory,
+    fetchTrackAdd,
+    fetchTrackDelete,
+    fetchSignIn,
+    fetchGetToken
+  };
+};
