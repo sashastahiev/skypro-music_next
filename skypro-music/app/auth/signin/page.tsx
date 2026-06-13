@@ -2,10 +2,9 @@
 import styles from './signin.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Signin() {
-  localStorage.setItem('access','undefined')
   const [formData, setFormData] = useState({
     login: '',
     password: ''

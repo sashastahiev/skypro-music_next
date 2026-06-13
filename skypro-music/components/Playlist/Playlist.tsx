@@ -2,7 +2,7 @@
 import styles from './Playlist.module.css'
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/store/store';
-import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
+import { setCurrentTrack, setIsPlay, setPlaylist } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
 import { useEffect, useState } from 'react';
@@ -62,6 +62,7 @@ export default function Playlist({id}: CategoryProps) {
     } else {
       data = await fetchTracksAll();
     }
+    dispatch(setPlaylist(data));
     setTracks(data);
     setIsLoading(false);
   };

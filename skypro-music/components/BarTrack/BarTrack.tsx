@@ -59,7 +59,6 @@ export default function BarTrack() {
     setProgress(newProgress);
     audioRef.current.currentTime = Math.round((newProgress / 100) * audioRef.current.duration);
   };
-
 const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
     

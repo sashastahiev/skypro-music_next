@@ -6,12 +6,15 @@ import { AudioProvider } from '@/context/AudioContext';
 import Playlist from '@/components/Playlist/Playlist';
 import Sibebar from '@/components/Sibebar/Sibebar';
 import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
 export default function Category() {
   const param = useParams();
   const id: any = param.id;
-  if (localStorage?.getItem('access') === 'undefined'){
+  useEffect(() => {
+    if (localStorage.getItem('access') === 'undefined'){
     window.location.href = '/auth/signin';
   }
+  })
   return (
     <>
     <div className={styles.wrapper}>

@@ -1,29 +1,22 @@
 'use client'
 import { useState } from 'react';
 import styles from './FilterTracks.module.css';
-import { useTrackData } from '@/ts/data';
 import { useParams } from 'next/navigation';
 import { useAppSelector } from '@/store/store';
 export default function Filter() {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
+  const tracks = useAppSelector((state) => state.tracks.Playlist);
+  let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
+  let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
+  let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
+  const namePlaylist = useAppSelector((state) => state.tracks.namePlaylist);
   const changeBlockList = (state: BlockListState) => {
     if (state === blockList)
       setBlockList("none");
     else
       setBlockList(state);
   };
-  const {tracks} = useTrackData();
-  let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
-  let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
-  let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
-  const namePlaylist = useAppSelector((state) => state.tracks.namePlaylist)
-  const setFilter = () => {
-    listGenre = [...new Set(tracks.flatMap(track => track.genre))];
-    listAuthor  = [...new Set(tracks.map(track => track.author))];
-    listYear = [...new Set(tracks.map(track => track.release_date))];
-  }
-  setFilter();
   const category = () => {
     const param = useParams();
     if (param.id === '4')

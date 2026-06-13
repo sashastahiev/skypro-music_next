@@ -2,12 +2,18 @@
 import Image from 'next/image';
 import styles from './Sibebar.module.css'
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 export default function Sibebar() {
+    const [name, setName] = useState<string>('Sergey.Ivanov');
+    useEffect(() => {
+        const storedName = localStorage.getItem('name');
+        setName(storedName || 'Sergey.Ivanov'); // fallback к начальному значению
+    }, []);
   return (
     <>
     <div className={styles.main__sidebar}>
         <div className={styles.sidebar__personal}>
-            <p className={styles.sidebar__personalName}>{localStorage.getItem('name') ? localStorage.getItem('name') : 'Sergey.Ivanov'}</p>
+            <p className={styles.sidebar__personalName}>{name}</p>
             <div className={styles.sidebar__icon}>
             <svg>
                 <use xlinkHref="/image/icon/sprite.svg#logout"></use>

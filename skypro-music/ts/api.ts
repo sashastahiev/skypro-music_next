@@ -1,12 +1,17 @@
 import { TrackType } from "@/sharedTypes/types";
-import { useTrackData } from "./data";
+import { useEffect, useState } from "react";
 
 export const useApi = () => {
+  const [access, setAccess] = useState<string | null>('');
+  useEffect(() => {
+    const access2: string | null = localStorage?.getItem('access');
+      setAccess(access2);
+  })
   const fetchTracksAll = async () => {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
           method: "GET",
           headers: {
-              Authorization: `Bearer ${localStorage?.getItem('access')}`,
+              Authorization: `Bearer ${access}`,
           },
       })
       .then((response) => response.json())
@@ -19,7 +24,7 @@ export const useApi = () => {
       let favoriteTrack: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
           method: "GET",
           headers: {
-          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+          Authorization: `Bearer ${access}`,
           },
       })
       .then((response) => response.json())
@@ -41,7 +46,7 @@ export const useApi = () => {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
           method: "GET",
           headers: {
-          Authorization: `Bearer ${localStorage?.getItem('access')}`,
+          Authorization: `Bearer ${access}`,
           },
       })
       .then((response) => response.json())
@@ -58,7 +63,7 @@ export const useApi = () => {
       const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        Authorization: `Bearer ${access}`,
       },
     })
     .then((response) => response.json())
@@ -89,7 +94,7 @@ export const useApi = () => {
       headers: {
         // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        Authorization: `Bearer ${access}`,
       },
     })
     if (response.ok) {
@@ -106,7 +111,7 @@ export const useApi = () => {
       headers: {
         // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
         "content-type": "application/json",
-        Authorization: `Bearer ${localStorage?.getItem('access')}`,
+        Authorization: `Bearer ${access}`,
       },
     })
     if (response.ok) {

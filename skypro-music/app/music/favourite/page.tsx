@@ -7,14 +7,17 @@ import Playlist from '@/components/Playlist/Playlist';
 import Sibebar from '@/components/Sibebar/Sibebar';
 import { useAppDispatch } from '@/store/store';
 import { setNamePlaylist } from '@/store/features/trackSlice';
+import { useEffect } from 'react';
 export default function Favorite() {
   const dispatch = useAppDispatch()
   const setPlaylist = () => {
     dispatch(setNamePlaylist('Избранное'))
   }
-  if (localStorage?.getItem('access') === 'undefined'){
-      window.location.href = '/auth/signin';
+  useEffect(() => {
+    if (localStorage.getItem('access') === 'undefined'){
+    window.location.href = '/auth/signin';
   }
+  })
   setPlaylist()
   return (
     <>

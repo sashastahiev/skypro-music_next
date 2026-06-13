@@ -3,16 +3,19 @@ import { useAppDispatch } from '@/store/store';
 import styles from './page.module.css';
 import Main from '@/components/Main/Main';
 import { setNamePlaylist } from '@/store/features/trackSlice';
+import { useEffect } from 'react';
 
 export default function Home() {
   const dispatch = useAppDispatch()
   const setPlaylist = () => {
     dispatch(setNamePlaylist('Треки'))
   }
-  if (localStorage?.getItem('access') === 'undefined'){
+  useEffect(() => {
+     if (localStorage.getItem('access') === 'undefined'){
      window.location.href = '/auth/signin';
-  }
-  setPlaylist()
+    }
+  })
+  setPlaylist();
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
