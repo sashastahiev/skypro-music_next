@@ -65,7 +65,7 @@ export default function BarTrack() {
 const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
     
-    let currentId = currentTrack.id;
+    let currentId: number = currentTrack.id;
     let nextId: number;
     
     if (isShuffleTrack) {
