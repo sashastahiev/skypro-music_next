@@ -64,7 +64,6 @@ export default function Playlist({id}: CategoryProps) {
     setIsLoading(false);
   };
 
-  // Вызываем при монтировании компонента
   useEffect(() => {
     changeCategory();
   }, []);
@@ -97,11 +96,9 @@ export default function Playlist({id}: CategoryProps) {
               onClick={() => onClickTrack(item)}
               className={cn(
                 styles.playlist__item,
-                // Добавляем класс disabled, если трек загружается
                 isLoading && styles.playlist__item_disabled
               )}
               key={index}
-              // Блокируем взаимодействие через CSS pointer-events
               style={{
                 pointerEvents: isLoading ? 'none' : 'auto'
               }}

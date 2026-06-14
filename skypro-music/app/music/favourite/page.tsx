@@ -14,9 +14,11 @@ export default function Favorite() {
     dispatch(setNamePlaylist('Избранное'))
   }
   useEffect(() => {
-    if (!localStorage.getItem('access')){
-    window.location.href = '/auth/signin';
-  }
+    try {
+      if (!localStorage.getItem('access')){
+      window.location.href = '/auth/signin';
+      } 
+    } catch {}
   })
   setPlaylist()
   return (

@@ -11,9 +11,11 @@ export default function Home() {
     dispatch(setNamePlaylist('Треки'))
   }
   useEffect(() => {
-     if (!localStorage.getItem('access')){
-     window.location.href = '/auth/signin';
-    }
+    try {
+      if (!localStorage.getItem('access')){
+      window.location.href = '/auth/signin';
+      } 
+    } catch {}
   })
   setPlaylist();
   return (

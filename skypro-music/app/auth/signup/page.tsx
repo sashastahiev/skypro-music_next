@@ -30,7 +30,6 @@ export default function SignUp() {
     setError('');
     setIsLoading(true);
 
-    // Локальная валидация
     if (!formData.login) {
       setError('Введите почту');
       setIsLoading(false);
@@ -70,7 +69,6 @@ export default function SignUp() {
             username: formData.login,
         }),
         headers: {
-            // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
             "content-type": "application/json",
         },
       })
@@ -79,7 +77,6 @@ export default function SignUp() {
         throw new Error(errorData.message || 'Ошибка регистрации');
       }
       const data = await response.json();
-      // Перенаправление после успешной регистрации
       window.location.href = '/auth/signin';
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';

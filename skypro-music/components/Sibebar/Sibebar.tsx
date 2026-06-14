@@ -6,8 +6,10 @@ import { useEffect, useState } from 'react';
 export default function Sibebar() {
     const [name, setName] = useState<string>('Sergey.Ivanov');
     useEffect(() => {
+        try {
         const storedName = localStorage.getItem('name');
-        setName(storedName || 'Sergey.Ivanov'); // fallback к начальному значению
+        setName(storedName || 'Sergey.Ivanov'); 
+        } catch {}
     }, []);
   return (
     <>

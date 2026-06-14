@@ -1,6 +1,14 @@
 import { TrackType } from "@/sharedTypes/types";
+import { useEffect, useState } from "react";
 
 export const useApi = () => {
+  const [access, setAccess] = useState('undefined')
+  useEffect(() => {
+    const temp = localStorage.getItem('access')
+    if (temp){
+      setAccess(temp);
+    }
+  },[])
   const fetchTracksAll = async (): Promise<TrackType[]> => {
     try {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
@@ -122,11 +130,7 @@ export const useApi = () => {
         },
       });
 
-      if (response.ok) {
-        console.log('Успешно сохранено');
-      }
       if (!response.ok) {
-        // Обрабатываем разные коды ошибок
         switch (response.status) {
           case 401:
             alert('Ошибка авторизации');
@@ -138,7 +142,6 @@ export const useApi = () => {
       }
     } catch (error) {
       console.log(`Ошибка при добавлении трека ${id} в избранное:`, error);
-      throw error;
     }
   };
 
@@ -156,11 +159,7 @@ export const useApi = () => {
         },
       });
 
-      if (response.ok) {
-        console.log('Успешно удалено');
-      }
       if (!response.ok) {
-        // Обрабатываем разные коды ошибок
         switch (response.status) {
           case 401:
             alert('Ошибка авторизации');
@@ -172,7 +171,7 @@ export const useApi = () => {
       }
     } catch (error) {
       console.log(`Ошибка при удалении трека ${id} из избранного:`, error);
-      throw error;
+      
     }
   };
 
@@ -211,7 +210,6 @@ export const useApi = () => {
       return access;
     } catch (error) {
       console.log('Ошибка при получении токена:', error);
-      throw error;
     }
   };
 

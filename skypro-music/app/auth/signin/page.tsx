@@ -29,7 +29,6 @@ export default function Signin() {
     setError('');
     setIsLoading(true);
 
-    // Локальная валидация
     if (!formData.login) {
       setError('Введите почту');
       setIsLoading(false);
@@ -59,9 +58,7 @@ export default function Signin() {
           "Content-Type": "application/json",
         },
       });
-      // Проверка HTTP-статуса
       if (!response.ok) {
-        // Обрабатываем разные коды ошибок
         switch (response.status) {
           case 400:
             setError('Неверные данные для входа');
@@ -88,7 +85,6 @@ export default function Signin() {
         return;
       }
       if (data.message) {
-        // Например, сервер может вернуть сообщение об успешной авторизации
         console.log('Успех:', data.message);
       }
       localStorage.setItem('email', formData.login)
@@ -101,13 +97,11 @@ export default function Signin() {
           password: formData.password
         }),
         headers: {
-          // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
           "content-type": "application/json",
         },
       })
         .then((response) => response.json())
       localStorage.setItem('access',access.access);
-      // Перенаправление после успешного входа
       window.location.href = '/music/main';
 
     } catch (error: unknown) {

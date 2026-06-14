@@ -11,9 +11,11 @@ export default function Category() {
   const param = useParams();
   const id: any = param.id;
   useEffect(() => {
-    if (!localStorage.getItem('access')){
-    window.location.href = '/auth/signin';
-  }
+    try {
+      if (!localStorage.getItem('access')){
+      window.location.href = '/auth/signin';
+      } 
+    } catch {}
   })
   return (
     <>
