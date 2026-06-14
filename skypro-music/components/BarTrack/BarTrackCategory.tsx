@@ -8,8 +8,10 @@ import { setCurrentTrack, setIsLoop, setIsPlay, setIsShuffle } from '@/store/fea
 import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
-
-export default function BarTrack() {
+interface BarTrackCategoryProps {
+  idbar: string | null;
+}
+export default function BarTrack({idbar}: BarTrackCategoryProps) {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
@@ -17,13 +19,13 @@ export default function BarTrack() {
   const { audioRef, playTrack, stopTrack } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTracksAll} = useApi();
+  const {fetchTrackCategory} = useApi();
   const dispatch = useAppDispatch();
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setPlaylist = async () => {
-    const data: TrackType[] = await fetchTracksAll();
+    const data: TrackType[] = await fetchTrackCategory(Number(idbar));
     await setTracks(data);
   }
   useEffect(() => {
@@ -70,7 +72,7 @@ export default function BarTrack() {
     setProgress(newProgress);
     audioRef.current.currentTime = Math.round((newProgress / 100) * audioRef.current.duration);
   };
-const nextTrack = async () => {
+    const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
     let currentId: number = currentTrack.id;
     let nextId: number;

@@ -24,14 +24,15 @@ export default function Playlist() {
   
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
-    setIsLoading(true);
+    await dispatch(setIsPlay(false));
+    await setIsLoading(true);
     try {
-      dispatch(setCurrentTrack(item));
-      dispatch(setIsPlay(true));
+      await dispatch(setCurrentTrack(item));
+      await dispatch(setIsPlay(true));
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
-      setIsLoading(false);
+      await setIsLoading(false);
     }
   };
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {

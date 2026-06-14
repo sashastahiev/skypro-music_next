@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useEffect, useState } from 'react';
-import BarTrack  from '@/components/BarTrack/BarTrack';
+import BarTrackFavorite  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 
@@ -23,14 +23,15 @@ export default function PlaylistFavorite() {
   };
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
-    setIsLoading(true);
+    await dispatch(setIsPlay(false));
+    await setIsLoading(true);
     try {
-      dispatch(setCurrentTrack(item));
-      dispatch(setIsPlay(true));
+      await dispatch(setCurrentTrack(item));
+      await dispatch(setIsPlay(true));
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
-      setIsLoading(false);
+      await setIsLoading(false);
     }
   };
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
@@ -124,7 +125,7 @@ export default function PlaylistFavorite() {
   </div>}
 </div>
 <AudioProvider>
-  <BarTrack />
+  <BarTrackFavorite />
 </AudioProvider>
 </>
   );

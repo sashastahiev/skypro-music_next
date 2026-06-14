@@ -4,7 +4,7 @@ import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
 import { useApi } from '@/ts/api';
 interface FilterCategoryProps {
-  id: string | null; // или string, если гарантировано наличие ID
+  id: string | null; 
 }
 export default function FilterCategory({id}: FilterCategoryProps) {
   type BlockListState = "genre" | "author" | "year" | "none";

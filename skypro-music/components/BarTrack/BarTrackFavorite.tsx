@@ -17,13 +17,13 @@ export default function BarTrack() {
   const { audioRef, playTrack, stopTrack } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTracksAll} = useApi();
+  const {fetchTrackFavoriteAll} = useApi();
   const dispatch = useAppDispatch();
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setPlaylist = async () => {
-    const data: TrackType[] = await fetchTracksAll();
+    const data: TrackType[] = await fetchTrackFavoriteAll();
     await setTracks(data);
   }
   useEffect(() => {

@@ -5,11 +5,11 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useEffect, useState } from 'react';
-import BarTrack  from '@/components/BarTrack/BarTrack';
+import BarTrackCategory  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 interface PlaylistCategoryProps {
-  id: string | null; // или string, если гарантировано наличие ID
+  id: string | null;
 }
 export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
   const dispatch = useAppDispatch();
@@ -26,14 +26,15 @@ export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
   
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
-    setIsLoading(true);
+    await dispatch(setIsPlay(false));
+    await setIsLoading(true);
     try {
-      dispatch(setCurrentTrack(item));
-      dispatch(setIsPlay(true));
+      await dispatch(setCurrentTrack(item));
+      await dispatch(setIsPlay(true));
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
-      setIsLoading(false);
+      await setIsLoading(false);
     }
   };
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
@@ -126,7 +127,7 @@ export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
     </div>}
   </div>
   <AudioProvider>
-    <BarTrack />
+    <BarTrackCategory idbar={id} />
   </AudioProvider>
   </>
   );
