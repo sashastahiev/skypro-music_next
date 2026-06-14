@@ -4,10 +4,10 @@ import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
 import { useApi } from '@/ts/api';
 
-export default function Filter() {
+export default function FilterFavorite() {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
-  const {fetchTracksAll} = useApi();
+  const {fetchTrackFavoriteAll} = useApi();
   const [tracks,setTracks] = useState<TrackType[]>([]);
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);;
@@ -19,15 +19,15 @@ export default function Filter() {
       setBlockList(state);
   };
   const setPlaylist = async () => {
-    let data: TrackType[] = await fetchTracksAll();
-    setTracks(data);
+    let data: TrackType[] = await fetchTrackFavoriteAll();
+    setTracks(data)
   }
-  const setFilter = async () => {
+   const setFilter = async () => {
     setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
     setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
     setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
   }
-  const clickIlemList = (name: string | string[], category: string) => {
+   const clickIlemList = (name: string | string[], category: string) => {
     try {
       let newTracks: TrackType[] = [];
       if (category === 'author'){
@@ -50,7 +50,7 @@ export default function Filter() {
   },[])
   return (
     <>
-    <h2 className={styles.centerblock__h2}>Треки</h2>
+    <h2 className={styles.centerblock__h2}>Избранное</h2>
     <div className={styles.centerblock__filter}>
       <div className={styles.filter__title}>Искать по:</div>
         <div style={{position: 'relative', marginRight: '10px'}}>
@@ -93,3 +93,4 @@ export default function Filter() {
     </>
   );
 }
+

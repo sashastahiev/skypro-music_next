@@ -9,10 +9,10 @@ import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 
-export default function Playlist() {
+export default function PlaylistFavorite() {
   const dispatch = useAppDispatch();
   const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTrackDelete, fetchTrackAdd, fetchTracksAll} = useApi();
+  const {fetchTrackDelete, fetchTrackAdd, fetchTrackFavoriteAll} = useApi();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,7 +21,6 @@ export default function Playlist() {
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
-  
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
     setIsLoading(true);
@@ -49,7 +48,7 @@ export default function Playlist() {
   }
   const changeCategory = async () => {
     setIsLoading(true);
-    let data: TrackType[] = await fetchTracksAll();
+    let data: TrackType[] = await fetchTrackFavoriteAll();
     setTracks(data);
     setIsLoading(false);
   };

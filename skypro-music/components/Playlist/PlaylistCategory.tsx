@@ -8,11 +8,13 @@ import { useEffect, useState } from 'react';
 import BarTrack  from '@/components/BarTrack/BarTrack';
 import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
-
-export default function Playlist() {
+interface PlaylistCategoryProps {
+  id: string | null; // или string, если гарантировано наличие ID
+}
+export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
   const dispatch = useAppDispatch();
   const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTrackDelete, fetchTrackAdd, fetchTracksAll} = useApi();
+  const {fetchTrackDelete, fetchTrackAdd, fetchTrackCategory} = useApi();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,10 +51,10 @@ export default function Playlist() {
   }
   const changeCategory = async () => {
     setIsLoading(true);
-    let data: TrackType[] = await fetchTracksAll();
+    let data: TrackType[] = await fetchTrackCategory(Number(id));
     setTracks(data);
     setIsLoading(false);
-  };
+  }
   useEffect(() => {
     changeCategory();
   },[]);
@@ -116,16 +118,16 @@ export default function Playlist() {
             <span className={styles.track__timeText}>{formatDuration(item.duration_in_seconds)}</span>
           </div>
         </div>
-    </div>
-  ))}
-  </div> : 
-    <div className={styles.loader}>
-      <div className={styles.loader_spinner}></div>
-  </div>}
-</div>
-<AudioProvider>
-  <BarTrack />
-</AudioProvider>
-</>
+      </div>
+    ))}
+    </div> : 
+      <div className={styles.loader}>
+        <div className={styles.loader_spinner}></div>
+    </div>}
+  </div>
+  <AudioProvider>
+    <BarTrack />
+  </AudioProvider>
+  </>
   );
 }

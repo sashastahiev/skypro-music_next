@@ -3,12 +3,15 @@ import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
 import { useApi } from '@/ts/api';
-
-export default function Filter() {
+interface FilterCategoryProps {
+  id: string | null; // или string, если гарантировано наличие ID
+}
+export default function FilterCategory({id}: FilterCategoryProps) {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
-  const {fetchTracksAll} = useApi();
   const [tracks,setTracks] = useState<TrackType[]>([]);
+  const [nameCategory, setCategory] = useState<string>('')
+  const {fetchTrackCategory} = useApi();
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);;
   const [listYear, setlistYear] = useState<string[]>([]);;
@@ -19,8 +22,16 @@ export default function Filter() {
       setBlockList(state);
   };
   const setPlaylist = async () => {
-    let data: TrackType[] = await fetchTracksAll();
-    setTracks(data);
+    let data: TrackType[] = await fetchTrackCategory(Number(id));
+    setTracks(data)
+  }
+  const category = () => {
+    if (id === '4')
+      setCategory('Инди заряд')
+    else if (id === '3')
+      setCategory('100 танцевальных хитов')
+    else if (id === '2')
+      setCategory('Плейлист дня')
   }
   const setFilter = async () => {
     setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
@@ -45,12 +56,13 @@ export default function Filter() {
     }
   }
   useEffect(() => {
+    category();
     setPlaylist();
     setFilter();
   },[])
   return (
     <>
-    <h2 className={styles.centerblock__h2}>Треки</h2>
+    <h2 className={styles.centerblock__h2}>{nameCategory}</h2>
     <div className={styles.centerblock__filter}>
       <div className={styles.filter__title}>Искать по:</div>
         <div style={{position: 'relative', marginRight: '10px'}}>

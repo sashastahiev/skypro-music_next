@@ -1,14 +1,6 @@
 import { TrackType } from "@/sharedTypes/types";
-import { useEffect, useState } from "react";
 
 export const useApi = () => {
-  const [access, setAccess] = useState('undefined')
-  useEffect(() => {
-    const temp = localStorage.getItem('access')
-    if (temp){
-      setAccess(temp);
-    }
-  },[])
   const fetchTracksAll = async (): Promise<TrackType[]> => {
     try {
       let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
@@ -80,7 +72,7 @@ export const useApi = () => {
     }
   };
 
-  const fetchTrackCategory = async (id: any): Promise<TrackType[]> => {
+  const fetchTrackCategory = async (id: number): Promise<TrackType[]> => {
     try {
       const tracks = await fetchTracksAll();
       const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
@@ -194,9 +186,9 @@ export const useApi = () => {
     }
   };
 
-  const fetchGetToken = async (login: string, password: string): Promise<any> => {
+  const fetchGetToken = async (login: string, password: string): Promise<string> => {
     try {
-      const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
+      const access: string = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
         method: "POST",
         body: JSON.stringify({
           email: login,
@@ -210,6 +202,7 @@ export const useApi = () => {
       return access;
     } catch (error) {
       console.log('Ошибка при получении токена:', error);
+      throw error;
     }
   };
 

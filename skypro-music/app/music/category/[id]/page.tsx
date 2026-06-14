@@ -3,20 +3,21 @@ import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './page.module.css';
 import Filter from '@/components/FilterTrack/FilterTracks';
 import { AudioProvider } from '@/context/AudioContext';
-import Playlist from '@/components/Playlist/Playlist';
 import Sibebar from '@/components/Sibebar/Sibebar';
-import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
+import PlaylistCategory from '@/components/Playlist/PlaylistCategory';
+import { useParams } from 'next/navigation';
+import FilterCategory from '@/components/FilterTrack/FilterCategory';
 export default function Category() {
   const param = useParams();
-  const id: any = param.id;
+  const id = param.id ? param.id.toString() : null;
   useEffect(() => {
     try {
-      if (!localStorage.getItem('access')){
-      window.location.href = '/auth/signin';
-      } 
+      if (!localStorage.getItem('access')) {
+        window.location.href = '/auth/signin';
+      }
     } catch {}
-  })
+  }, []); 
   return (
     <>
     <div className={styles.wrapper}>
@@ -35,9 +36,9 @@ export default function Category() {
                   name="search"
               />
               </div>
-              <Filter />
+              <FilterCategory id={id} />
               <AudioProvider>
-                  <Playlist id={id}/>
+                  <PlaylistCategory id={id}/>
               </AudioProvider>
           </div>
           <Sibebar />

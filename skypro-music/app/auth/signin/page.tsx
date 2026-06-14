@@ -12,7 +12,7 @@ export default function Signin() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -24,7 +24,7 @@ export default function Signin() {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -84,11 +84,7 @@ export default function Signin() {
         setIsLoading(false);
         return;
       }
-      if (data.message) {
-        console.log('Успех:', data.message);
-      }
       localStorage.setItem('email', formData.login)
-      localStorage.setItem('password', formData.password)
       localStorage.setItem('name',data.username)
       const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
         method: "POST",

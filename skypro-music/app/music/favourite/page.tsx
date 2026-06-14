@@ -1,18 +1,12 @@
 'use client'
 import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './page.module.css';
-import Filter from '@/components/FilterTrack/FilterTracks';
 import { AudioProvider } from '@/context/AudioContext';
-import Playlist from '@/components/Playlist/Playlist';
 import Sibebar from '@/components/Sibebar/Sibebar';
-import { useAppDispatch } from '@/store/store';
-import { setNamePlaylist } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
+import PlaylistFavorite from '@/components/Playlist/PlaylistFavorite';
+import FilterFavorite from '@/components/FilterTrack/FilterFavorite';
 export default function Favorite() {
-  const dispatch = useAppDispatch()
-  const setPlaylist = () => {
-    dispatch(setNamePlaylist('Избранное'))
-  }
   useEffect(() => {
     try {
       if (!localStorage.getItem('access')){
@@ -20,7 +14,6 @@ export default function Favorite() {
       } 
     } catch {}
   })
-  setPlaylist()
   return (
     <>
     <div className={styles.wrapper}>
@@ -39,9 +32,9 @@ export default function Favorite() {
                   name="search"
               />
               </div>
-              <Filter />
+              <FilterFavorite />
               <AudioProvider>
-                  <Playlist id={'Избранное'}/>
+                  <PlaylistFavorite />
               </AudioProvider>
           </div>
           <Sibebar />

@@ -13,7 +13,7 @@ export default function SignUp() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -25,7 +25,7 @@ export default function SignUp() {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
@@ -76,7 +76,6 @@ export default function SignUp() {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Ошибка регистрации');
       }
-      const data = await response.json();
       window.location.href = '/auth/signin';
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
