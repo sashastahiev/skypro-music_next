@@ -45,6 +45,7 @@ export default function PlaylistFavorite() {
     else {
       await fetchTrackDelete(updatedItem._id)
     }
+    changeCategory();
   }
   const changeCategory = async () => {
     setIsLoading(true);
