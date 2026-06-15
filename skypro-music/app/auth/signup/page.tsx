@@ -76,6 +76,8 @@ export default function SignUp() {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Ошибка регистрации');
       }
+      localStorage.setItem('email', formData.login)
+      localStorage.setItem('name',formData.login)
       window.location.href = '/auth/signin';
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
@@ -93,56 +95,50 @@ export default function SignUp() {
   };
 
   return (
-      <div className={styles.wrapper}>
-        <div className={styles.containerEnter}>
-          <div className={styles.modal__block}>
-            <form className={styles.modal__form} onSubmit={handleSubmit}>
-              <Link href="/music/main">
-                <div className={styles.modal__logo}>
-                  <img src="/image/logo_modal.png" alt="logo" />
-                </div>
-              </Link>
-              <input
-                className={styles.modal__input}
-                type="text"
-                name="name"
-                placeholder="Имя"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <input
-                className={classNames(styles.modal__input, styles.login)}
-                type="text"
-                name="login"
-                placeholder="Почта"
-                value={formData.login}
-                onChange={handleChange}
-              />
-              <input
-                className={styles.modal__input}
-                type="password"
-                name="password"
-                placeholder="Пароль"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {error && (
-                <div className={styles.errorContainer}>
-                  <span className={styles.errorMessage}>{error}</span>
-                </div>
-              )}
-              <button
-                className={classNames(
-                  styles.modal__btnSignupEnt,
-                  isLoading && styles.modal__btnLoading
-                )}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
-              </button>
-            </form>
-          </div>
+    <form className={styles.modal__form} onSubmit={handleSubmit}>
+      <Link href="/music/main">
+        <div className={styles.modal__logo}>
+          <img src="/image/logo_modal.png" alt="logo" />
         </div>
-      </div>
+      </Link>
+      <input
+        className={styles.modal__input}
+        type="text"
+        name="name"
+        placeholder="Имя"
+        value={formData.name}
+        onChange={handleChange}
+      />
+      <input
+        className={classNames(styles.modal__input, styles.login)}
+        type="text"
+        name="login"
+        placeholder="Почта"
+        value={formData.login}
+        onChange={handleChange}
+      />
+      <input
+        className={styles.modal__input}
+        type="password"
+        name="password"
+        placeholder="Пароль"
+        value={formData.password}
+        onChange={handleChange}
+      />
+      {error && (
+        <div className={styles.errorContainer}>
+          <span className={styles.errorMessage}>{error}</span>
+        </div>
+      )}
+      <button
+        className={classNames(
+          styles.modal__btnSignupEnt,
+          isLoading && styles.modal__btnLoading
+        )}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+      </button>
+    </form>
   );
 }

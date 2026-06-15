@@ -16,11 +16,13 @@ export default function Sibebar() {
     <div className={styles.main__sidebar}>
         <div className={styles.sidebar__personal}>
             <p className={styles.sidebar__personalName}>{name}</p>
-            <div className={styles.sidebar__icon}>
-            <svg>
-                <use xlinkHref="/image/icon/sprite.svg#logout"></use>
-            </svg>
-            </div>
+            <Link href="/auth/signin">
+                <div className={styles.sidebar__icon}>
+                <svg>
+                    <use xlinkHref="/image/icon/sprite.svg#logout"></use>
+                </svg>
+                </div>
+            </Link>
         </div>
         <div className={styles.sidebar__block}>
             <div className={styles.sidebar__list}>

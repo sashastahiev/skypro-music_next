@@ -1,15 +1,22 @@
 'use client'
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './MenuNav.module.css';
 import Image from 'next/image';
 export default function MenuNav() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [sign, setSign] = useState<string | null>(null)
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+  const setSignClient = async () => {
+    const name = await localStorage.getItem('name')
+    if (name !== 'null')
+      await setSign(name);
+  }
+  useEffect(() => {
+    setSignClient();
+  })
   return (
     <>
       <nav className={styles.main__nav}>
@@ -48,7 +55,7 @@ export default function MenuNav() {
             </li>
             <li className={styles.menu__item}>
               <Link href="/auth/signin" className={styles.menu__link}>
-                Войти
+                {sign ? 'Выйти' : 'Войти'}
               </Link>
             </li>
           </ul>

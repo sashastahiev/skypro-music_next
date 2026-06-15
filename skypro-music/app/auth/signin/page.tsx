@@ -85,7 +85,7 @@ export default function Signin() {
         return;
       }
       localStorage.setItem('email', formData.login)
-      localStorage.setItem('name',data.username)
+      localStorage.setItem('name', formData.login)
       const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
         method: "POST",
         body: JSON.stringify({
@@ -117,51 +117,45 @@ export default function Signin() {
 
 
   return (
-      <div className={styles.wrapper}>
-        <div className={styles.containerEnter}>
-          <div className={styles.modal__block}>
-            <form className={styles.modal__form} onSubmit={handleSubmit}>
-              <a href="/music/main">
-                <div className={styles.modal__logo}>
-                  <img src="/image/logo_modal.png" alt="logo" />
-                </div>
-              </a>
-              <input
-                className={classNames(styles.modal__input, styles.login)}
-                type="text"
-                name="login"
-                placeholder="Почта"
-                value={formData.login}
-                onChange={handleChange}
-              />
-              <input
-                className={styles.modal__input}
-                type="password"
-                name="password"
-                placeholder="Пароль"
-                value={formData.password}
-                onChange={handleChange}
-              />
-              {error && (
-                <div className={styles.errorContainer}>
-                  <span className={styles.errorMessage}>{error}</span>
-                </div>
-              )}
-              <button
-                className={classNames(
-                  styles.modal__btnEnter,
-                  isLoading && styles.modal__btnLoading
-                )}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Вход...' : 'Войти'}
-              </button>
-              <Link href="/auth/signup" className={styles.modal__btnSignup}>
-                Зарегистрироваться
-              </Link>
-            </form>
-          </div>
+    <form className={styles.modal__form} onSubmit={handleSubmit}>
+      <Link href="/music/main">
+        <div className={styles.modal__logo}>
+          <img src="/image/logo_modal.png" alt="logo" />
         </div>
-      </div>
+      </Link>
+      <input
+        className={classNames(styles.modal__input, styles.login)}
+        type="text"
+        name="login"
+        placeholder="Почта"
+        value={formData.login}
+        onChange={handleChange}
+      />
+      <input
+        className={styles.modal__input}
+        type="password"
+        name="password"
+        placeholder="Пароль"
+        value={formData.password}
+        onChange={handleChange}
+      />
+      {error && (
+        <div className={styles.errorContainer}>
+          <span className={styles.errorMessage}>{error}</span>
+        </div>
+      )}
+      <button
+        className={classNames(
+          styles.modal__btnEnter,
+          isLoading && styles.modal__btnLoading
+        )}
+        disabled={isLoading}
+      >
+        {isLoading ? 'Вход...' : 'Войти'}
+      </button>
+      <Link href="/auth/signup" className={styles.modal__btnSignup}>
+        Зарегистрироваться
+      </Link>
+    </form>
   );
 }

@@ -53,7 +53,10 @@ export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
   }
   const changeCategory = async () => {
     setIsLoading(true);
-    let data: TrackType[] = await fetchTrackCategory(Number(id));
+    let data: TrackType[] = [];
+    if (localStorage.getItem('name')){
+      data = await fetchTrackCategory(Number(id));
+    }
     setTracks(data);
     setIsLoading(false);
   }

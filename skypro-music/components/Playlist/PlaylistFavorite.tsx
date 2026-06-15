@@ -50,7 +50,9 @@ export default function PlaylistFavorite() {
   }
   const changeCategory = async () => {
     setIsLoading(true);
-    let data: TrackType[] = await fetchTrackFavoriteAll();
+    let data: TrackType[] = [];
+    if (localStorage.getItem('name'))
+      data = await fetchTrackFavoriteAll();
     setTracks(data);
     setIsLoading(false);
   };
