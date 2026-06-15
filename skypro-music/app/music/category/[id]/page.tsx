@@ -1,7 +1,6 @@
 'use client'
 import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './page.module.css';
-import Filter from '@/components/FilterTrack/FilterTracks';
 import { AudioProvider } from '@/context/AudioContext';
 import Sibebar from '@/components/Sibebar/Sibebar';
 import { useEffect } from 'react';

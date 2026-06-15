@@ -37,7 +37,7 @@ export default function Playlist() {
   };
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
     e.stopPropagation()
-    const updatedItem = { ...item, isLike: !item.isLike };
+    const updatedItem: TrackType = { ...item, isLike: !item.isLike };
     setTracks(tracks.map(track =>
       track.id === item.id ? updatedItem : track
     ));

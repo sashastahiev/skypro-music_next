@@ -14,7 +14,7 @@ export default function BarTrack() {
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef, playTrack, stopTrack } = useAudio();
+  const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const {fetchTrackFavoriteAll} = useApi();
@@ -30,8 +30,8 @@ export default function BarTrack() {
     setPlaylist(); 
   },[])
   function formatDuration(seconds: number) {
-    let minutes = Math.floor(seconds / 60);
-    let secs = seconds % 60;
+    let minutes: number = Math.floor(seconds / 60);
+    let secs: number = seconds % 60;
     if (Number.isNaN(seconds)) {
       minutes = 0;
       secs = 0;
@@ -54,7 +54,7 @@ export default function BarTrack() {
     if (audioRef.current) {
       const { currentTime, duration } = audioRef.current;
       if (isFinite(duration) && duration > 0) {
-        const newProgress = (currentTime / duration) * 100;
+        const newProgress: number = (currentTime / duration) * 100;
         setProgress(newProgress);
       }
     }
@@ -62,10 +62,10 @@ export default function BarTrack() {
   const handleProgressClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!audioRef.current || !progressBarRef.current) return;
 
-    const rect = progressBarRef.current.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const progressWidth = rect.width;
-    const newProgress = (clickX / progressWidth) * 100;
+    const rect: DOMRect = progressBarRef.current.getBoundingClientRect();
+    const clickX: number = event.clientX - rect.left;
+    const progressWidth: number = rect.width;
+    const newProgress: number = (clickX / progressWidth) * 100;
 
     setProgress(newProgress);
     audioRef.current.currentTime = Math.round((newProgress / 100) * audioRef.current.duration);
@@ -126,11 +126,9 @@ const nextTrack = async () => {
 
     try {
       if (!isPlayTrackInd) {
-        await playTrack();
-        dispatch(setIsPlay(true));
+        await dispatch(setIsPlay(true));
       } else {
-        await stopTrack();
-        dispatch(setIsPlay(false));
+        await dispatch(setIsPlay(false));
       }
     } catch (error) {
       console.error('Ошибка управления воспроизведением:', error);
@@ -152,7 +150,7 @@ const nextTrack = async () => {
     }
   };
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
+    const newVolume: number = parseFloat(event.target.value);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
     }
@@ -245,11 +243,18 @@ const nextTrack = async () => {
                     </div>
                     </div>
                 </div>
-                <div className={styles.bar__volumeBlock}>
-                    <div style={{color: 'white', marginRight:'20px'}}>
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.currentTime : 0))}/
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.duration : 0))}
-                        </div>
+                <div className={styles.bar__volumeBlock}>    
+                  <div style={{ color: 'white', marginRight: '20px' }}>
+                    {formatDuration(
+                      Math.round(audioRef.current ? audioRef.current.currentTime : 0)
+                    )}/
+                    {formatDuration(
+                      Math.round(audioRef.current && !isNaN(audioRef.current.duration)
+                        ? audioRef.current.duration
+                        : 0
+                      )
+                    )}
+                  </div>
                     <div className={styles.volume__content}>
                     <div className={styles.volume__image}>
                         <svg className={styles.volume__svg}>

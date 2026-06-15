@@ -12,6 +12,7 @@ export default function FilterFavorite() {
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);;
   const [listYear, setlistYear] = useState<string[]>([]);;
+
   const changeBlockList = (state: BlockListState) => {
     if (state === blockList)
       setBlockList("none");
@@ -20,12 +21,12 @@ export default function FilterFavorite() {
   };
   const setPlaylist = async () => {
     let data: TrackType[] = await fetchTrackFavoriteAll();
-    setTracks(data)
+    await setTracks(data)
   }
    const setFilter = async () => {
-    setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
-    setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
-    setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
+    await setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
+    await setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
+    await setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
   }
    const clickIlemList = (name: string | string[], category: string) => {
     try {

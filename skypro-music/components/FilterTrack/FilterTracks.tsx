@@ -20,12 +20,12 @@ export default function Filter() {
   };
   const setPlaylist = async () => {
     let data: TrackType[] = await fetchTracksAll();
-    setTracks(data);
+    await setTracks(data);
   }
   const setFilter = async () => {
-    setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
-    setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
-    setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
+    await setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
+    await setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
+    await setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
   }
   const clickIlemList = (name: string | string[], category: string) => {
     try {

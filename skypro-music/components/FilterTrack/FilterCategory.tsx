@@ -23,7 +23,7 @@ export default function FilterCategory({id}: FilterCategoryProps) {
   };
   const setPlaylist = async () => {
     let data: TrackType[] = await fetchTrackCategory(Number(id));
-    setTracks(data)
+    await setTracks(data)
   }
   const category = () => {
     if (id === '4')
@@ -34,9 +34,10 @@ export default function FilterCategory({id}: FilterCategoryProps) {
       setCategory('Плейлист дня')
   }
   const setFilter = async () => {
-    setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
-    setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
-    setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
+    await setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
+    await setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
+    await setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
+    console.log(tracks)
   }
   const clickIlemList = (name: string | string[], category: string) => {
     try {

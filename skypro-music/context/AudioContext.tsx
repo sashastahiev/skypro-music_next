@@ -1,33 +1,16 @@
 'use client'
-import React, { createContext, useRef, useContext, useState, useEffect } from 'react';
+import React, { createContext, useRef, useContext} from 'react';
 
 interface AudioContextType {
   audioRef: React.RefObject<HTMLAudioElement | null>;
-  playTrack: () => void;
-  stopTrack: () => void;
 }
 
 export const AudioContext = createContext<AudioContextType | null>(null);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const playTrack = async () => {
-    if (!audioRef.current) return;
-    try {
-      await audioRef.current.play();
-    } catch (error) {
-      console.error('Ошибка при запуске трека:', error);
-    }
-  };
-
-  const stopTrack = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-  };
-
   return (
-    <AudioContext.Provider value={{ audioRef, playTrack, stopTrack }}>
+    <AudioContext.Provider value={{ audioRef }}>
       {children}
     </AudioContext.Provider>
   );

@@ -14,7 +14,7 @@ export default function BarTrack() {
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef, playTrack, stopTrack } = useAudio();
+  const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const {fetchTracksAll} = useApi();
@@ -100,8 +100,8 @@ const nextTrack = async () => {
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
 
-    let currentId = currentTrack.id;
-    let prevId = (currentId - 1 + tracks.length) % tracks.length;
+    let currentId: number = currentTrack.id;
+    let prevId: number = (currentId - 1 + tracks.length) % tracks.length;
     const prevTrack: TrackType = tracks[prevId];
     dispatch(setCurrentTrack(prevTrack));
     dispatch(setIsPlay(true));
@@ -126,11 +126,9 @@ const nextTrack = async () => {
 
     try {
       if (!isPlayTrackInd) {
-        await playTrack();
-        dispatch(setIsPlay(true));
+        await dispatch(setIsPlay(true));
       } else {
-        await stopTrack();
-        dispatch(setIsPlay(false));
+        await dispatch(setIsPlay(false));
       }
     } catch (error) {
       console.error('Ошибка управления воспроизведением:', error);
@@ -152,7 +150,7 @@ const nextTrack = async () => {
     }
   };
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
+    const newVolume: number = parseFloat(event.target.value);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
     }
@@ -246,10 +244,17 @@ const nextTrack = async () => {
                     </div>
                 </div>
                 <div className={styles.bar__volumeBlock}>
-                    <div style={{color: 'white', marginRight:'20px'}}>
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.currentTime : 0))}/
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.duration : 0))}
-                        </div>
+                  <div style={{ color: 'white', marginRight: '20px' }}>
+                    {formatDuration(
+                      Math.round(audioRef.current ? audioRef.current.currentTime : 0)
+                    )}/
+                    {formatDuration(
+                      Math.round(audioRef.current && !isNaN(audioRef.current.duration)
+                        ? audioRef.current.duration
+                        : 0
+                      )
+                    )}
+                  </div>
                     <div className={styles.volume__content}>
                     <div className={styles.volume__image}>
                         <svg className={styles.volume__svg}>

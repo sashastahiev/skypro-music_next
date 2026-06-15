@@ -9,14 +9,14 @@ import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 interface BarTrackCategoryProps {
-  idbar: string | null;
+  id: number;
 }
-export default function BarTrack({idbar}: BarTrackCategoryProps) {
+export default function BarTrackCategory ({id}: BarTrackCategoryProps) {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
-  const { audioRef, playTrack, stopTrack } = useAudio();
+  const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const {fetchTrackCategory} = useApi();
@@ -25,15 +25,15 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setPlaylist = async () => {
-    const data: TrackType[] = await fetchTrackCategory(Number(idbar));
+    const data: TrackType[] = await fetchTrackCategory(id);
     await setTracks(data);
   }
   useEffect(() => {
     setPlaylist(); 
   },[])
   function formatDuration(seconds: number) {
-    let minutes = Math.floor(seconds / 60);
-    let secs = seconds % 60;
+    let minutes: number = Math.floor(seconds / 60);
+    let secs: number = seconds % 60;
     if (Number.isNaN(seconds)) {
       minutes = 0;
       secs = 0;
@@ -56,7 +56,7 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
     if (audioRef.current) {
       const { currentTime, duration } = audioRef.current;
       if (isFinite(duration) && duration > 0) {
-        const newProgress = (currentTime / duration) * 100;
+        const newProgress: number = (currentTime / duration) * 100;
         setProgress(newProgress);
       }
     }
@@ -64,9 +64,9 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
   const handleProgressClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!audioRef.current || !progressBarRef.current) return;
 
-    const rect = progressBarRef.current.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const progressWidth = rect.width;
+    const rect: DOMRect = progressBarRef.current.getBoundingClientRect();
+    const clickX: number = event.clientX - rect.left;
+    const progressWidth: number = rect.width;
     const newProgress = (clickX / progressWidth) * 100;
 
     setProgress(newProgress);
@@ -102,8 +102,8 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
 
-    let currentId = currentTrack.id;
-    let prevId = (currentId - 1 + tracks.length) % tracks.length;
+    let currentId: number = currentTrack.id;
+    let prevId: number = (currentId - 1 + tracks.length) % tracks.length;
     const prevTrack: TrackType = tracks[prevId];
     dispatch(setCurrentTrack(prevTrack));
     dispatch(setIsPlay(true));
@@ -128,11 +128,9 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
 
     try {
       if (!isPlayTrackInd) {
-        await playTrack();
-        dispatch(setIsPlay(true));
+        await dispatch(setIsPlay(true));
       } else {
-        await stopTrack();
-        dispatch(setIsPlay(false));
+        await dispatch(setIsPlay(false));
       }
     } catch (error) {
       console.error('Ошибка управления воспроизведением:', error);
@@ -154,7 +152,7 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
     }
   };
   const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(event.target.value);
+    const newVolume: number = parseFloat(event.target.value);
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
     }
@@ -247,11 +245,18 @@ export default function BarTrack({idbar}: BarTrackCategoryProps) {
                     </div>
                     </div>
                 </div>
-                <div className={styles.bar__volumeBlock}>
-                    <div style={{color: 'white', marginRight:'20px'}}>
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.currentTime : 0))}/
-                        {formatDuration(Math.round(audioRef.current ? audioRef.current?.duration : 0))}
-                        </div>
+                <div className={styles.bar__volumeBlock}>  
+                  <div style={{ color: 'white', marginRight: '20px' }}>
+                    {formatDuration(
+                      Math.round(audioRef.current ? audioRef.current.currentTime : 0)
+                    )}/
+                    {formatDuration(
+                      Math.round(audioRef.current && !isNaN(audioRef.current.duration)
+                        ? audioRef.current.duration
+                        : 0
+                      )
+                    )}
+                  </div>
                     <div className={styles.volume__content}>
                     <div className={styles.volume__image}>
                         <svg className={styles.volume__svg}>

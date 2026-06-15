@@ -3,7 +3,7 @@ import { TrackType } from "@/sharedTypes/types";
 export const useApi = () => {
   const fetchTracksAll = async (): Promise<TrackType[]> => {
     try {
-      let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
+      let data: TrackType[] = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage?.getItem('access')}`,
@@ -18,7 +18,7 @@ export const useApi = () => {
         isLike: false,
       }));
 
-      let favoriteTrack: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
+      let favoriteTrack: TrackType[] = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage?.getItem('access')}`,
@@ -49,7 +49,7 @@ export const useApi = () => {
 
   const fetchTrackFavoriteAll = async (): Promise<TrackType[]> => {
     try {
-      let data: TrackType[] = await fetch("https://webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
+      let data: TrackType[] = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/favorite/all/", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage?.getItem('access')}`,
@@ -75,7 +75,7 @@ export const useApi = () => {
   const fetchTrackCategory = async (id: number): Promise<TrackType[]> => {
     try {
       const tracks = await fetchTracksAll();
-      const data = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
+      const data = await fetch(`https:/webdev-music-003b5b991590.herokuapp.com/catalog/selection/${id}/`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${localStorage?.getItem('access')}`,
@@ -110,7 +110,7 @@ export const useApi = () => {
 
   const fetchTrackAdd = async (id: number): Promise<void> => {
     try {
-      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
+      const response = await fetch(`https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
         method: "POST",
         body: JSON.stringify({
           email: localStorage?.getItem('email'),
@@ -139,7 +139,7 @@ export const useApi = () => {
 
   const fetchTrackDelete = async (id: number): Promise<void> => {
     try {
-      const response = await fetch(`https://webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
+      const response = await fetch(`https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/${id}/favorite/`, {
         method: "DELETE",
         body: JSON.stringify({
           email: localStorage?.getItem('email'),
@@ -169,7 +169,7 @@ export const useApi = () => {
 
   const fetchSignIn = async (login: string, password: string): Promise<Response> => {
     try {
-      const response = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/login/", {
+      const response = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/user/login/", {
         method: "POST",
         body: JSON.stringify({
           email: login,
@@ -188,7 +188,7 @@ export const useApi = () => {
 
   const fetchGetToken = async (login: string, password: string): Promise<string> => {
     try {
-      const access: string = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
+      const access: string = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/user/token/", {
         method: "POST",
         body: JSON.stringify({
           email: login,

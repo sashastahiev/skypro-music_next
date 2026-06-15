@@ -5,13 +5,14 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useEffect, useState } from 'react';
-import BarTrackCategory  from '@/components/BarTrack/BarTrack';
+import BarTrackCategory  from '@/components/BarTrack/BarTrackCategory';
 import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 interface PlaylistCategoryProps {
   id: string | null;
 }
 export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
+  const idbar : number = Number(id);
   const dispatch = useAppDispatch();
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const {fetchTrackDelete, fetchTrackAdd, fetchTrackCategory} = useApi();
@@ -39,7 +40,7 @@ export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
   };
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
     e.stopPropagation()
-    const updatedItem = { ...item, isLike: !item.isLike };
+    const updatedItem: TrackType = { ...item, isLike: !item.isLike };
     setTracks(tracks.map(track =>
       track.id === item.id ? updatedItem : track
     ));
@@ -127,7 +128,7 @@ export default function PlaylistCategory({ id }: PlaylistCategoryProps) {
     </div>}
   </div>
   <AudioProvider>
-    <BarTrackCategory idbar={id} />
+    <BarTrackCategory id={idbar} />
   </AudioProvider>
   </>
   );
