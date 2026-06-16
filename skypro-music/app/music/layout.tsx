@@ -9,13 +9,6 @@ interface LayoutProps {
 }
 
 export default function Layout({ children }: LayoutProps) {
-  useEffect(() => {
-    try {
-      if (!localStorage.getItem('access')){
-      window.location.href = '/auth/signin';
-      } 
-    } catch {}
-  })
   return (
     <>
     <div className={styles.wrapper}>

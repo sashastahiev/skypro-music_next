@@ -11,17 +11,17 @@ import { useApi } from '@/ts/api';
 
 export default function Playlist() {
   const dispatch = useAppDispatch();
-  const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTrackDelete, fetchTrackAdd, fetchTracksAll} = useApi();
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
+  const [tracks, setTracks] = useState<TrackType[]>([])
+  const {fetchTrackDelete, fetchTrackAdd} = useApi();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   function formatDuration(seconds: number) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
-  
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
     await dispatch(setIsPlay(false));
@@ -35,6 +35,10 @@ export default function Playlist() {
       await setIsLoading(false);
     }
   };
+  useEffect(() => {
+    setTracks(playlist);
+    setIsLoading(false);
+  },[playlist])
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
     e.stopPropagation()
     const updatedItem: TrackType = { ...item, isLike: !item.isLike };
@@ -48,18 +52,6 @@ export default function Playlist() {
       await fetchTrackDelete(updatedItem._id)
     }
   }
-  const changeCategory = async () => {
-    setIsLoading(true);
-    let data: TrackType[] = [];
-    if (localStorage.getItem('name')){
-      data = await fetchTracksAll();
-    }
-    setTracks(data);
-    setIsLoading(false);
-  };
-  useEffect(() => {
-    changeCategory();
-  },[]);
   return (
     <>
       <div className={styles.centerblock__content}>

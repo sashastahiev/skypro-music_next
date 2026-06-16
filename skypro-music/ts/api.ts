@@ -1,7 +1,7 @@
 import { TrackType } from "@/sharedTypes/types";
 
 export const useApi = () => {
-  const fetchTracksAll = async (): Promise<TrackType[]> => {
+  const fetchTracksAll = async ():Promise<TrackType[]> => {
     try {
       let data: TrackType[] = await fetch("https:/webdev-music-003b5b991590.herokuapp.com/catalog/track/all/", {
         method: "GET",
@@ -67,7 +67,6 @@ export const useApi = () => {
       return data;
     } catch (error){
       console.log(`Ошибка при получении избранных треков`, error);
-      window.location.href = '/auth/signin'
       throw error;
     }
   };

@@ -16,19 +16,16 @@ export default function BarTrack() {
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
   const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist)
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const {fetchTracksAll} = useApi();
   const dispatch = useAppDispatch();
 
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const setPlaylist = async () => {
-    const data: TrackType[] = await fetchTracksAll();
-    await setTracks(data);
-  }
   useEffect(() => {
-    setPlaylist(); 
-  },[])
+   setTracks(playlist)
+  },[playlist])
   function formatDuration(seconds: number) {
     let minutes = Math.floor(seconds / 60);
     let secs = seconds % 60;

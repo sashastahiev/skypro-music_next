@@ -2,12 +2,14 @@
 import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
-import { useApi } from '@/ts/api';
+import { useAppSelector } from '@/store/store';
 
 export default function Filter() {
   type BlockListState = "genre" | "author" | "year" | "none";
   const [blockList, setBlockList] = useState<BlockListState>("none");
-  const {fetchTracksAll} = useApi();
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
+  const name: string | null = useAppSelector((state) => state.tracks.namePlaylist);
+  const [namePlaylist, setName] = useState<string>('');
   const [tracks,setTracks] = useState<TrackType[]>([]);
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);;
@@ -18,14 +20,10 @@ export default function Filter() {
     else
       setBlockList(state);
   };
-  const setPlaylist = async () => {
-    let data: TrackType[] = await fetchTracksAll();
-    await setTracks(data);
-  }
-  const setFilter = async () => {
-    await setlistGenre([...new Set(tracks.flatMap(track => track.genre))]);
-    await setlistAuthor([...new Set(tracks.flatMap(track => track.author))]);
-    await setlistYear([...new Set(tracks.flatMap(track => track.release_date))]);
+  const setFilter = () => {
+    setlistGenre([...new Set(playlist.flatMap(track => track.genre))]);
+    setlistAuthor([...new Set(playlist.map(track => track.author))]);
+    setlistYear([...new Set(playlist.map(track => track.release_date))]);
   }
   const clickIlemList = (name: string | string[], category: string) => {
     try {
@@ -45,12 +43,16 @@ export default function Filter() {
     }
   }
   useEffect(() => {
-    setPlaylist();
-    setFilter();
-  },[])
+    const set = async () => {
+      setTracks(playlist);
+      setName(name);
+      setFilter();
+    }
+    set();
+  },[playlist])
   return (
     <>
-    <h2 className={styles.centerblock__h2}>Треки</h2>
+    <h2 className={styles.centerblock__h2}>{namePlaylist}</h2>
     <div className={styles.centerblock__filter}>
       <div className={styles.filter__title}>Искать по:</div>
         <div style={{position: 'relative', marginRight: '10px'}}>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from './MenuNav.module.css';
 import Image from 'next/image';
+import { logout } from '@/utils/logout';
 export default function MenuNav() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [sign, setSign] = useState<string | null>(null)
@@ -54,7 +55,7 @@ export default function MenuNav() {
               </Link>
             </li>
             <li className={styles.menu__item}>
-              <Link href="/auth/signin" className={styles.menu__link}>
+              <Link onClick={logout} href="/auth/signin" className={styles.menu__link}>
                 {sign ? 'Выйти' : 'Войти'}
               </Link>
             </li>
