@@ -7,7 +7,6 @@ import { useEffect, useRef, useState } from 'react';
 import { setCurrentTrack, setIsLoop, setIsPlay, setIsShuffle } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
-import { useApi } from '@/ts/api';
 
 export default function BarTrack() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
@@ -18,9 +17,7 @@ export default function BarTrack() {
   const volumeSliderRef = useRef<HTMLInputElement>(null);
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist)
   const [tracks, setTracks] = useState<TrackType[]>([]);
-  const {fetchTracksAll} = useApi();
   const dispatch = useAppDispatch();
-
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {

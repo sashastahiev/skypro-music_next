@@ -5,8 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useEffect, useState } from 'react';
-import BarTrack  from '@/components/BarTrack/BarTrack';
-import { AudioProvider } from '@/context/AudioContext';
 import { useApi } from '@/ts/api';
 
 export default function Playlist() {
@@ -24,15 +22,15 @@ export default function Playlist() {
   };
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
-    await dispatch(setIsPlay(false));
-    await setIsLoading(true);
+      dispatch(setIsPlay(false));
+      setIsLoading(true);
     try {
-      await dispatch(setCurrentTrack(item));
-      await dispatch(setIsPlay(true));
+      dispatch(setCurrentTrack(item));
+      dispatch(setIsPlay(true));
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
-      await setIsLoading(false);
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -104,11 +102,12 @@ export default function Playlist() {
             </a>
           </div>
           <div className={styles.track__time}>
+            { localStorage.getItem('name') ? <>
             <svg onClick={(e) => {setIsLike(e,item)}} className={styles.track__timeSvg}>
               {!item.isLike ? <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
               : 
               <use xlinkHref="/image/icon/LikeActive.svg"></use>}
-            </svg>
+            </svg></> : ''}
             <span className={styles.track__timeText}>{formatDuration(item.duration_in_seconds)}</span>
           </div>
         </div>
@@ -119,9 +118,6 @@ export default function Playlist() {
       <div className={styles.loader_spinner}></div>
   </div>}
 </div>
-<AudioProvider>
-  <BarTrack />
-</AudioProvider>
 </>
   );
 }

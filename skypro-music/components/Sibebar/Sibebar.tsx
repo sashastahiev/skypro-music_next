@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { logout } from '@/utils/logout';
 export default function Sibebar() {
-    const [name, setName] = useState<string>('Sergey.Ivanov');
+    const [name, setName] = useState<string>('Гость');
     useEffect(() => {
         try {
         const storedName = localStorage.getItem('name');
-        setName(storedName || 'Sergey.Ivanov'); 
+        setName(storedName || 'Гость'); 
         } catch {}
     }, []);
   return (

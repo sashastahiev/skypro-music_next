@@ -10,18 +10,18 @@ import { setPlaylist, setNamePlaylist } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
 export default function Category() {
   const param = useParams();
-  const id = param.id ? param.id.toString : null;
+  const id = param.id ? param.id.toString() : null;
   const dispatch = useAppDispatch();
   const {fetchTrackCategory} = useApi();
   const SetPlaylistCategory = async () => {
     const data: TrackType[] = await fetchTrackCategory(Number(id));
-    await dispatch(setPlaylist(data));
+    dispatch(setPlaylist(data));
     if (Number(id) === 2)
-      await dispatch(setNamePlaylist('Плейлист дня'))
+      dispatch(setNamePlaylist('Плейлист дня'))
     if (Number(id) === 3)
-      await dispatch(setNamePlaylist('100 танцевальных хитов'))
+      dispatch(setNamePlaylist('100 танцевальных хитов'))
     if (Number(id) === 4)
-      await dispatch(setNamePlaylist('Инди-заряд'))
+      dispatch(setNamePlaylist('Инди-заряд'))
   }
   useEffect(() => {
     SetPlaylistCategory();

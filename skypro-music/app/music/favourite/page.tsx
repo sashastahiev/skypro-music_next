@@ -19,7 +19,7 @@ export default function Favorite() {
     }
     useEffect(() => {
       setPlaylistFavoriteAll();
-    })
+    },[])
   return (
     <>
     <Filter/>

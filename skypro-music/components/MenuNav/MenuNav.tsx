@@ -3,21 +3,21 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from './MenuNav.module.css';
 import Image from 'next/image';
-import { logout } from '@/utils/logout';
+import { exit } from '@/utils/logout';
 export default function MenuNav() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [sign, setSign] = useState<string | null>(null)
+  const [sign, setSign] = useState<boolean>(false)
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-  const setSignClient = async () => {
-    const name = await localStorage.getItem('name')
-    if (name !== 'null')
-      await setSign(name);
+  const setSignClient = () => {
+    const name = localStorage.getItem('name')
+    if (name !== null)
+      setSign(true);
   }
   useEffect(() => {
     setSignClient();
-  })
+  },[])
   return (
     <>
       <nav className={styles.main__nav}>
@@ -55,7 +55,7 @@ export default function MenuNav() {
               </Link>
             </li>
             <li className={styles.menu__item}>
-              <Link onClick={logout} href="/auth/signin" className={styles.menu__link}>
+              <Link onClick={exit} href="/auth/signin" className={styles.menu__link}>
                 {sign ? 'Выйти' : 'Войти'}
               </Link>
             </li>

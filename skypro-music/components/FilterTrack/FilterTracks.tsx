@@ -43,12 +43,9 @@ export default function Filter() {
     }
   }
   useEffect(() => {
-    const set = async () => {
-      setTracks(playlist);
-      setName(name);
-      setFilter();
-    }
-    set();
+    setTracks(playlist);
+    setName(name);
+    setFilter();
   },[playlist])
   return (
     <>
