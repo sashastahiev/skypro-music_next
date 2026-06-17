@@ -8,7 +8,7 @@ export default function Sibebar() {
     const [name, setName] = useState<string>('Гость');
     useEffect(() => {
         try {
-        const storedName = localStorage.getItem('name');
+        const storedName = localStorage.getItem('email');
         setName(storedName || 'Гость'); 
         } catch {}
     }, []);

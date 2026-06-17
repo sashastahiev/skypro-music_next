@@ -3,8 +3,10 @@ import styles from './signup.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useApi } from '@/ts/api';
 
-export default function SignUp() {
+export default function SignUp() { 
+  const { fetchGetToken, fetchSignUp} = useApi();
   const [formData, setFormData] = useState({
     login: '',
     password: '',
@@ -61,23 +63,11 @@ export default function SignUp() {
     }
 
     try {
-      const response = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/signup/", {
-        method: "POST",
-        body: JSON.stringify({
-            email: formData.login,
-            password: formData.password,
-            username: formData.login,
-        }),
-        headers: {
-            "content-type": "application/json",
-        },
-      })
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Ошибка регистрации');
-      }
+      await fetchSignUp(formData.login, formData.password, formData.name);
       localStorage.setItem('email', formData.login)
-      localStorage.setItem('name',formData.login)
+      localStorage.setItem('name',formData.name)
+      const access = await fetchGetToken(formData.login,formData.password)
+      localStorage.setItem('access',access);
       window.location.href = '/auth/signin';
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';

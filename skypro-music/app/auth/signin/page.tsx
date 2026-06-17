@@ -3,8 +3,10 @@ import styles from './signin.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useApi } from '@/ts/api';
 
 export default function Signin() {
+  const {fetchSignIn, fetchGetToken} = useApi();
   const [formData, setFormData] = useState({
     login: '',
     password: ''
@@ -48,16 +50,7 @@ export default function Signin() {
     }
 
     try {
-      const response = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/login/", {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.login,
-          password: formData.password
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetchSignIn(formData.login, formData.password);
       if (!response.ok) {
         switch (response.status) {
           case 400:
@@ -85,21 +78,9 @@ export default function Signin() {
         return;
       }
       localStorage.setItem('email', formData.login)
-      localStorage.setItem('name', formData.login)
-      const access = await fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/", {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.login,
-          password: formData.password
-        }),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-      localStorage.setItem('access',access.access);
+      const access = await fetchGetToken(formData.login,formData.password)
+      localStorage.setItem('access',access);
       window.location.href = '/music/main';
-
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
       if (error instanceof TypeError) {

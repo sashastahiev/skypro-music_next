@@ -6,8 +6,9 @@ import { useParams } from 'next/navigation';
 import { useAppDispatch } from '@/store/store';
 import { useApi } from '@/ts/api';
 import { TrackType } from '@/sharedTypes/types';
-import { setPlaylist, setNamePlaylist } from '@/store/features/trackSlice';
+import { setPlaylist, setNamePlaylist, setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
+import BarTrack from '@/components/BarTrack/BarTrack';
 export default function Category() {
   const param = useParams();
   const id = param.id ? param.id.toString() : null;
@@ -15,13 +16,14 @@ export default function Category() {
   const {fetchTrackCategory} = useApi();
   const SetPlaylistCategory = async () => {
     const data: TrackType[] = await fetchTrackCategory(Number(id));
-    dispatch(setPlaylist(data));
+    await dispatch(setPlaylist(data));
+    await dispatch(setPlaylistForFilter(data));
     if (Number(id) === 2)
-      dispatch(setNamePlaylist('Плейлист дня'))
+      await dispatch(setNamePlaylist('Плейлист дня'))
     if (Number(id) === 3)
-      dispatch(setNamePlaylist('100 танцевальных хитов'))
+      await dispatch(setNamePlaylist('100 танцевальных хитов'))
     if (Number(id) === 4)
-      dispatch(setNamePlaylist('Инди-заряд'))
+      await dispatch(setNamePlaylist('Инди-заряд'))
   }
   useEffect(() => {
     SetPlaylistCategory();
@@ -31,6 +33,7 @@ export default function Category() {
     <Filter/>
     <AudioProvider>
         <Playlist/>
+        <BarTrack />
     </AudioProvider>
     </>
   );

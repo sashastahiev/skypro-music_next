@@ -21,7 +21,7 @@ export default function BarTrack() {
   const [progress, setProgress] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
-   setTracks(playlist)
+   setTracks(playlist);
   },[playlist])
   function formatDuration(seconds: number) {
     let minutes = Math.floor(seconds / 60);
@@ -66,7 +66,7 @@ export default function BarTrack() {
   };
 const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
-    let currentId: number = currentTrack.id;
+    let currentId: number = await currentTrack.id;
     let nextId: number;
     if (isShuffleTrack) {
       do {
@@ -76,8 +76,8 @@ const nextTrack = async () => {
       nextId = (currentId + 1) % tracks.length;
     }
     const nextTrack: TrackType = tracks[nextId];
-    dispatch(setCurrentTrack(nextTrack));
-    dispatch(setIsPlay(true));
+    await dispatch(setCurrentTrack(nextTrack));
+    await dispatch(setIsPlay(true));
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -88,17 +88,16 @@ const nextTrack = async () => {
       setIsLoading(false);
     } catch (error) {
       console.error('Ошибка воспроизведения следующего трека:', error);
-      dispatch(setIsPlay(false));
+      await dispatch(setIsPlay(false));
     }
   };
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
-
+    await dispatch(setIsPlay(false))
     let currentId: number = currentTrack.id;
     let prevId: number = (currentId - 1 + tracks.length) % tracks.length;
     const prevTrack: TrackType = tracks[prevId];
-    dispatch(setCurrentTrack(prevTrack));
-    dispatch(setIsPlay(true));
+    await dispatch(setCurrentTrack(prevTrack));
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -109,7 +108,7 @@ const nextTrack = async () => {
       setIsLoading(false);
     } catch (error) {
       console.error('Ошибка воспроизведения предыдущего трека:', error);
-      dispatch(setIsPlay(false));
+      await dispatch(setIsPlay(false));
     }
   };
   const toggleIsLoop = () => {
@@ -218,20 +217,13 @@ const nextTrack = async () => {
                         </svg>
                     </div>
                     </div>
-
                     <div className={styles.player__trackPlay}>
-
                     <Track />
-
                     <div className={styles.trackPlay__dislike}>
                         <div className={cn(styles.player__btnShuffle, styles.btnIcon)}>
                         <svg className={styles.trackPlay__likeSvg}>
-                            <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
-                        </svg>
-                        </div>
-                        <div className={cn(styles.trackPlay__dislike, styles.btnIcon)}>
-                        <svg className={styles.trackPlay__dislikeSvg}>
-                            <use xlinkHref="/image/icon/sprite.svg#icon-dislike"></use>
+                            {currentTrack.isLike ? <use xlinkHref="/image/icon/LikeActive.svg"></use> :
+                            <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>}
                         </svg>
                         </div>
                     </div>
@@ -251,9 +243,9 @@ const nextTrack = async () => {
                   </div>
                     <div className={styles.volume__content}>
                     <div className={styles.volume__image}>
-                        <svg className={styles.volume__svg}>
+                      <svg className={styles.volume__svg}>
                         <use xlinkHref="/image/icon/sprite.svg#icon-volume"></use>
-                        </svg>
+                      </svg>
                     </div>
                     <div className={cn(styles.volume__progress, styles.btn)}>
                         <input

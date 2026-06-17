@@ -5,16 +5,18 @@ import { AudioProvider } from '@/context/AudioContext';
 import { useAppDispatch } from '@/store/store';
 import { useApi } from '@/ts/api';
 import { TrackType } from '@/sharedTypes/types';
-import { setPlaylist, setNamePlaylist } from '@/store/features/trackSlice';
+import { setPlaylist, setNamePlaylist, setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
+import BarTrack from '@/components/BarTrack/BarTrack';
 export default function Favorite() {
   const dispatch = useAppDispatch();
     const {fetchTrackFavoriteAll} = useApi();
     const setPlaylistFavoriteAll = async () => {
-      if (localStorage.getItem('name')){
+      if (localStorage.getItem('email')){
         const data: TrackType[] = await fetchTrackFavoriteAll()
-        dispatch(setPlaylist(data));
-        dispatch(setNamePlaylist('Избранные'));
+        await dispatch(setPlaylist(data));
+        await dispatch(setPlaylistForFilter(data));
+        await dispatch(setNamePlaylist('Избранные'));
       }
     }
     useEffect(() => {
@@ -25,6 +27,7 @@ export default function Favorite() {
     <Filter/>
     <AudioProvider>
         <Playlist />
+        <BarTrack />
     </AudioProvider>
     </>
   );

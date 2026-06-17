@@ -3,45 +3,50 @@ import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
 import classNames from 'classnames';
-import { useAppSelector } from '@/store/store';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setPlaylistForFilter } from '@/store/features/trackSlice';
 
 export default function Filter() {
   type BlockListState = "genre" | "author" | "year" | "none";
+  const dispatch = useAppDispatch();
   const [blockList, setBlockList] = useState<BlockListState>("none");
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
   const name: string | null = useAppSelector((state) => state.tracks.namePlaylist);
   const [namePlaylist, setName] = useState<string>('');
   const [tracks,setTracks] = useState<TrackType[]>([]);
   const [listGenre,setlistGenre] = useState<string[]>([]);
-  const [listAuthor, setlistAuthor] = useState<string[]>([]);;
-  const [listYear, setlistYear] = useState<string[]>([]);;
+  const [listAuthor, setlistAuthor] = useState<string[]>([]);
+  const [listYear, setlistYear] = useState<string[]>([]);
+  const [DeleteFilter,setDeleteFilter] = useState<boolean>(false);
   const changeBlockList = (state: BlockListState) => {
     if (state === blockList)
       setBlockList("none");
     else
       setBlockList(state);
   };
+  const DelFilter = () => {
+    dispatch(setPlaylistForFilter(playlist));
+    setBlockList("none");
+    setDeleteFilter(false);
+  }
+  const setPlaylistWithFilter = async (filter: string, name: string) => {
+    let tracksWithFilter: TrackType[] = [];
+    if (name === 'author'){
+      tracksWithFilter = tracks.filter((item) => item.author === filter)
+    }
+    else if (name === 'year'){
+      tracksWithFilter = tracks.filter((item) => item.release_date === filter)
+    }
+    else if (name === 'genre'){
+      tracksWithFilter = tracks.filter((item) => item.genre.includes(filter));
+    }
+    await dispatch(setPlaylistForFilter(tracksWithFilter));
+    setDeleteFilter(true);
+  }
   const setFilter = () => {
     setlistGenre([...new Set(playlist.flatMap(track => track.genre))]);
     setlistAuthor([...new Set(playlist.map(track => track.author))]);
     setlistYear([...new Set(playlist.map(track => track.release_date))]);
-  }
-  const clickIlemList = (name: string | string[], category: string) => {
-    try {
-      let newTracks: TrackType[] = [];
-      if (category === 'author'){
-        newTracks = tracks.filter(item => item.author === name)
-      }
-      if (category === 'year'){
-        newTracks = tracks.filter(item => item.release_date === name)
-      }
-      if (category === 'genre'){
-        newTracks = tracks.filter(item => item.genre === name)
-      }
-      setTracks(newTracks);
-    } catch {
-      alert('Ошибка в фильтрации треков');
-    }
   }
   useEffect(() => {
     setTracks(playlist);
@@ -62,7 +67,7 @@ export default function Filter() {
           <div className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listAuthor.map((item) => (
-                <li onClick={() => clickIlemList(item, 'author')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'author')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -74,7 +79,7 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listYear.map((item) => (
-                <li onClick={() => clickIlemList(item, 'year')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
@@ -86,12 +91,13 @@ export default function Filter() {
           <div  className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listGenre.map((item) => (
-                <li onClick={() => clickIlemList(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
               ))}
             </ul>
           </div>}
           <div className={styles.circleLength}>{listGenre.length}</div>
         </div>
+        {DeleteFilter && <div onClick={() => DelFilter()} className={styles.filter__buttonFilter}>Cбросить фильтры</div>}
     </div>
     </>
   );

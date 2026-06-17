@@ -40,6 +40,23 @@
   padding: 6px 20px;
   cursor: pointer;
 }
+.filter__buttonFilter {
+  position: relative;
+  color: white;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  border: 1px solid #ffffff;
+  border-radius: 60px;
+  padding: 6px 20px;
+  cursor: pointer;
+  background-color: #B672FF;
+  margin-left: 12px;
+}
+.filter__buttonFilter:hover {
+  background-color: #a857ff;
+}
 .filter__button:hover {
   transform: scale(1.02);
   transition: 0.1s;
@@ -113,7 +130,7 @@
   );
   mask-image: linear-gradient(
     to bottom,
-    #000 50%,
+    #000 60%,
     transparent 100%
   );
 }

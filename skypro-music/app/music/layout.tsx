@@ -4,8 +4,6 @@ import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './layout.module.css';
 import Sibebar from '@/components/Sibebar/Sibebar';
 
-import { AudioProvider } from '@/context/AudioContext';
-import BarTrack from '@/components/BarTrack/BarTrack';
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -30,9 +28,6 @@ export default function Layout({ children }: LayoutProps) {
               />
               </div>
               <main>{children}</main>
-              <AudioProvider>
-                <BarTrack />
-              </AudioProvider>
           </div>
           <Sibebar />
         </main>

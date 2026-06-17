@@ -7,6 +7,7 @@ type initialStateType = {
   isShuffle: boolean,
   namePlaylist: string,
   Playlist: TrackType[],
+  PlaylistForFilter: TrackType[],
 };
 
 const initialState: initialStateType = {
@@ -16,6 +17,7 @@ const initialState: initialStateType = {
   isShuffle: false,
   namePlaylist: 'Треки',
   Playlist: [],
+  PlaylistForFilter: [],
 };
 
 const trackSlice = createSlice({
@@ -39,9 +41,19 @@ const trackSlice = createSlice({
     },
     setPlaylist: (state, action: PayloadAction<TrackType[]>) => {
       state.Playlist = action.payload
-    }
+    },
+    setPlaylistForFilter: (state, action: PayloadAction<TrackType[]>) => {
+      state.PlaylistForFilter = action.payload
+    },
   },
 });
 
-export const { setCurrentTrack, setIsPlay, setIsLoop, setIsShuffle, setNamePlaylist, setPlaylist} = trackSlice.actions;
+export const { 
+  setCurrentTrack, 
+  setIsPlay, 
+  setIsLoop, 
+  setIsShuffle, 
+  setNamePlaylist, 
+  setPlaylist, 
+  setPlaylistForFilter} = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;

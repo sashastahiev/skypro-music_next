@@ -11,7 +11,7 @@ export default function MenuNav() {
     setIsMenuOpen(!isMenuOpen);
   };
   const setSignClient = () => {
-    const name = localStorage.getItem('name')
+    const name = localStorage.getItem('email')
     if (name !== null)
       setSign(true);
   }

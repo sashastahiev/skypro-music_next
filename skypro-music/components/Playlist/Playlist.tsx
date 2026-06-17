@@ -9,7 +9,7 @@ import { useApi } from '@/ts/api';
 
 export default function Playlist() {
   const dispatch = useAppDispatch();
-  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter);
   const namePlaylist: string = useAppSelector((state) => state.tracks.namePlaylist)
   const [tracks, setTracks] = useState<TrackType[]>([])
   const {fetchTrackDelete, fetchTrackAdd} = useApi();
@@ -23,11 +23,11 @@ export default function Playlist() {
   };
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
-      dispatch(setIsPlay(false));
+      await dispatch(setIsPlay(false));
       setIsLoading(true);
     try {
-      dispatch(setCurrentTrack(item));
-      dispatch(setIsPlay(true));
+      await dispatch(setCurrentTrack(item));
+      await dispatch(setIsPlay(true));
     } catch (error) {
       console.error('Ошибка при смене трека:', error);
     } finally {
@@ -60,7 +60,7 @@ export default function Playlist() {
     <>
       <div className={styles.centerblock__content}>
         <div className={styles.content__title}>
-          <div className={cn(styles.playlistTitle__col, styles.col01)}>Трек</div>
+          <div className={cn(styles.playlistTitle__col, styles.col01)}>Трек ({tracks.length})</div>
           <div className={cn(styles.playlistTitle__col, styles.col02)}>Исполнитель</div>
           <div className={cn(styles.playlistTitle__col, styles.col03)}>Альбом</div>
           <div className={cn(styles.playlistTitle__col, styles.col04)}>
@@ -108,7 +108,7 @@ export default function Playlist() {
             </a>
           </div>
           <div className={styles.track__time}>
-            { localStorage.getItem('name') ? <>
+            { localStorage.getItem('email') ? <>
             <svg onClick={(e) => {setIsLike(e,item)}} className={styles.track__timeSvg}>
               {!item.isLike ? <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>
               : 
