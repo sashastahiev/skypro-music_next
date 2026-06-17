@@ -29,7 +29,7 @@
   margin-right: 15px;
 }
 .filter__button {
-  /*composes: btn-text from '/src/UI/Button/button.module.css';*/
+  position: relative;
   color: white;
   font-style: normal;
   font-weight: 400;
@@ -40,10 +40,10 @@
   padding: 6px 20px;
   cursor: pointer;
 }
-
-/* .filter__button:not(:last-child) {
-  margin-right: 10px;
-} */
+.filter__button:hover {
+  transform: scale(1.02);
+  transition: 0.1s;
+}
 
 .filter__block {
   position: absolute;
@@ -100,13 +100,20 @@
   font-size: 13px;
   color: white;
 }
-.fade_in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.fade_in.visible {
-  opacity: 1;
-  transform: translateY(0);
+.fade_out_text {
+  position: relative;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 60%, /* 60% — непрозрачный */
+    transparent 100% /* 100% — полностью прозрачный */
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 50%,
+    transparent 100%
+  );
 }

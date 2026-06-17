@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
+import classNames from 'classnames';
 import { useAppSelector } from '@/store/store';
 
 export default function Filter() {
@@ -49,11 +50,14 @@ export default function Filter() {
   },[playlist])
   return (
     <>
-    <h2 className={styles.centerblock__h2}>{namePlaylist}</h2>
+    <h2 className={classNames(styles.centerblock__h2,styles.fade_out_text)}>{namePlaylist}</h2>
     <div className={styles.centerblock__filter}>
       <div className={styles.filter__title}>Искать по:</div>
         <div style={{position: 'relative', marginRight: '10px'}}>
-          <div onClick={() => changeBlockList("author")} className={styles.filter__button}>исполнителю</div>
+          <div onClick={() => changeBlockList("author")} className={styles.filter__button}>
+            исполнителю
+            <div className={styles.shine}></div>
+          </div>
           {blockList === 'author' && 
           <div className={styles.filter__block}>
             <ul className={styles.filter__list}>

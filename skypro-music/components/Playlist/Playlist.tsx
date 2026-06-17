@@ -10,6 +10,7 @@ import { useApi } from '@/ts/api';
 export default function Playlist() {
   const dispatch = useAppDispatch();
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
+  const namePlaylist: string = useAppSelector((state) => state.tracks.namePlaylist)
   const [tracks, setTracks] = useState<TrackType[]>([])
   const {fetchTrackDelete, fetchTrackAdd} = useApi();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
@@ -40,9 +41,14 @@ export default function Playlist() {
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
     e.stopPropagation()
     const updatedItem: TrackType = { ...item, isLike: !item.isLike };
-    setTracks(tracks.map(track =>
-      track.id === item.id ? updatedItem : track
-    ));
+    if (namePlaylist === 'Избранные'){
+      setTracks(tracks.filter(track => track._id !== item._id))
+    }
+    else {
+      setTracks(tracks.map(track =>
+        track.id === item.id ? updatedItem : track
+      ));
+    }
     if (updatedItem.isLike){
       await fetchTrackAdd(updatedItem._id)
     }
