@@ -23,7 +23,7 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
   margin-bottom: 24px;
-  padding-right: 10px;
+  padding-right: 0px;
 }
 
 .content__playlist {
@@ -36,7 +36,7 @@
   -ms-flex-direction: column;
   flex-direction: column;
   overflow-y:scroll;
-  padding-right: 10px;
+  padding-right: 0px;
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -84,6 +84,11 @@
   text-align: end;
   display: flex;
   justify-content: end;
+  padding-right: 25px;
+}
+.block4 {
+  width: 33px;
+  height: auto
 }
 
 .playlist__item {
@@ -110,7 +115,7 @@
 }
 .playlist__track:hover {
   transition: 300ms;
-  background-color: #B672FF;
+  background-color: #cba6f3;
 }
 
 .track__title {
@@ -220,6 +225,7 @@
   line-height: 24px;
   text-align: right;
   color: #696969;
+  padding-right: 25px;
 }
 .pulsing_circle {
   position: absolute;

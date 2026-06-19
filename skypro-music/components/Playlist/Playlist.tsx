@@ -64,6 +64,7 @@ export default function Playlist() {
           <div className={cn(styles.playlistTitle__col, styles.col01)}>Трек ({tracks.length})</div>
           <div className={cn(styles.playlistTitle__col, styles.col02)}>Исполнитель</div>
           <div className={cn(styles.playlistTitle__col, styles.col03)}>Альбом</div>
+          {localStorage.getItem('access') ? <div className={styles.block4}></div> : ''}
           <div className={cn(styles.playlistTitle__col, styles.col04)}>
             <svg className={styles.playlistTitle__svg}>
               <use xlinkHref="/image/icon/sprite.svg#icon-watch"></use>

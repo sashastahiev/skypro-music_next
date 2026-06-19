@@ -185,7 +185,7 @@ export const useApi = () => {
   };
   const fetchRefreshToken = async () => {
     try {
-      fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/refresh/", {
+      const responce = await fetch(`${API_URL}user/token/refresh/`, {
         method: "POST",
         body: JSON.stringify({
           refresh:
@@ -196,9 +196,10 @@ export const useApi = () => {
         },
       })
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((response) => response.access);
+      localStorage.setItem('access',responce);
     } catch {
-        return '';
+        return;
     }
   }
   return {

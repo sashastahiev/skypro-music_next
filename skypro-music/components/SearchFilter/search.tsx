@@ -1,6 +1,6 @@
 import { TrackType } from "@/sharedTypes/types";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import stylesSearch from './search.module.css';
 import styles from '@/components/Playlist/Playlist.module.css'
 import cn from "classnames";
@@ -20,11 +20,20 @@ export default function Search() {
     const {fetchTrackDelete, fetchTrackAdd} = useApi();
     const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
     const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
-
+    const SearchRef = useRef<HTMLInputElement>(null);
+    const BlockListRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         if (searchQuery.trim()) {
-          const filtered = allItems.filter(item =>
-            item.album.toLowerCase().includes(searchQuery.toLowerCase())
+          const preliminaryFiltered = allItems.filter(item => {
+            const lowerSearchQuery = searchQuery.toLowerCase();
+            return (
+                item.name.toLowerCase().includes(lowerSearchQuery) ||
+                item.author.toLowerCase().includes(lowerSearchQuery) ||
+                item.album.toLowerCase().includes(lowerSearchQuery)
+            );
+            });
+            const filtered = preliminaryFiltered.filter((item, index, array) =>
+            array.findIndex(otherItem => otherItem.id === item.id) === index
           );
           setSuggestions(filtered);
           setIsDropdownOpen(true);
@@ -66,9 +75,25 @@ export default function Search() {
     useEffect(() => {
         setAllItems(playlist);
     },[playlist])
+    useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isOutside =
+        (!SearchRef.current || !SearchRef.current.contains(target)) &&
+        (!BlockListRef.current || !BlockListRef.current.contains(target));
+      if (isOutside) {
+        setSuggestions([]);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
     return(
         <>
         <input
+            ref={SearchRef}
             style={{color: theme === 'light' ? 'black' : ''}}
             className={theme === 'dark' ? stylesSearch.search__text : stylesSearch.search__textLight}
             type="search"
@@ -80,7 +105,8 @@ export default function Search() {
         />
         {isDropdownOpen && suggestions.length > 0 && (
         <>
-        {<div className={stylesSearch.content__playlist}>
+        <p className={stylesSearch.countSearch}>{suggestions.length}</p>
+        {<div ref={BlockListRef} className={theme === 'dark' ? stylesSearch.content__playlist : stylesSearch.content__playlistLight}>
             {suggestions.map((item, index) => (
             <div
                 onClick={() => handleSuggestionClick(item)}
@@ -114,6 +140,7 @@ export default function Search() {
                     {item.album}
                     </a>
                 </div>
+                {!localStorage.getItem('access') ? <div className={styles.block4}></div> : ''}
                 <div className={styles.track__time}>
                     { localStorage.getItem('email') ? <>
                     <svg onClick={(e) => {setIsLike(e,item)}} className={styles.track__timeSvg}>

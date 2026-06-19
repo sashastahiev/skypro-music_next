@@ -29,9 +29,9 @@ const ThemeContent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           <MenuNav />
           <div style={{ backgroundColor: theme === 'light' ? 'white' : 'black'}} className={styles.centerblock}>
             <div className={styles.centerblock__search}>
-              <svg className={styles.search__svg}>
+              {/* <svg className={styles.search__svg}>
                 <use xlinkHref="/image/icon/sprite.svg#icon-search"></use>
-              </svg>
+              </svg> */}
               <Search />
             </div>
             <main>{children}</main>
