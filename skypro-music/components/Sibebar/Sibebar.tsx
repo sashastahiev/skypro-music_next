@@ -4,7 +4,9 @@ import styles from './Sibebar.module.css'
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { logout } from '@/utils/logout';
+import { useTheme } from '@/context/ThemeContext';
 export default function Sibebar() {
+    const { theme } = useTheme()
     const [name, setName] = useState<string>('Гость');
     useEffect(() => {
         try {
@@ -14,13 +16,14 @@ export default function Sibebar() {
     }, []);
   return (
     <>
-    <div className={styles.main__sidebar}>
+    <div style={{ backgroundColor: theme === 'light' ? 'white' : 'black'}} className={styles.main__sidebar}>
         <div className={styles.sidebar__personal}>
-            <p className={styles.sidebar__personalName}>{name}</p>
+            <p style={{color: theme === 'light' ? 'black' : ''}} className={styles.sidebar__personalName}>{name}</p>
             <Link onClick={logout} href="/auth/signin">
-                <div className={styles.sidebar__icon}>
+                <div style={{backgroundColor: theme === 'light' ? 'white' : ''}}className={styles.sidebar__icon}>
                 <svg>
-                    <use xlinkHref="/image/icon/sprite.svg#logout"></use>
+                    {theme === 'dark' ? <use xlinkHref="/image/icon/sprite.svg#logout"></use> :
+                    <use xlinkHref="/image/icon/logoutLight.svg"></use>}
                 </svg>
                 </div>
             </Link>

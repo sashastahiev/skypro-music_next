@@ -1,8 +1,9 @@
 import { TrackType } from "@/sharedTypes/types";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export const useApi = () => {
   const API_URL: string = "https://webdev-music-003b5b991590.herokuapp.com/";
+  const router = useRouter();
   const fetchTracksAll = async ():Promise<TrackType[]> => {
     try {
       let data: TrackType[] = await fetch(`${API_URL}catalog/track/all/`,{
@@ -16,24 +17,7 @@ export const useApi = () => {
         isLike: false,
       }));
       if (localStorage.getItem('email')){
-        let favoriteTrack: TrackType[] = await fetch(`${API_URL}catalog/track/favorite/all/`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage?.getItem('access')}`,
-          },
-        }).then((response) => {
-          if (response.status === 401 ){
-            const router = useRouter();
-            alert('Ошибка авторизации')
-            router.push('/auth/signin')
-          } return response;
-        }).then((response) => response.json())
-          .then((data) => data.data);
-        favoriteTrack = favoriteTrack.map((item, index) => ({
-          ...item,
-          id: index,
-          isLike: true,
-        }));
+        let favoriteTrack: TrackType[] = await fetchTrackFavoriteAll();
         data.forEach(item1 => {
           const item2 = favoriteTrack.find((item) => item._id === item1._id);
           if (item2 && item2.isLike === true) {
@@ -47,37 +31,46 @@ export const useApi = () => {
       throw error;
     }
   };
-  const fetchTrackFavoriteAll = async () => {
-    try {
-      let response: TrackType[] = await fetch(`${API_URL}catalog/track/favorite/all/`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage?.getItem('access')}`,
-        },
-      }).then((response) => {
-        if (response.status === 401){
-          const router = useRouter();
-          alert('Ошибка авторизации')
-          router.push('/auth/signin');
-        } return response;
-      }).then((response) => response.json())
-        .then((data) => data.data);
-      response = response.map((item, index) => ({
-        ...item,
-        id: index,
-        isLike: true,
-      }));
-      return response;
-    } catch (error){
-      console.log(`Ошибка при получении избранных треков`, error);
-      throw error;
-    }
+  const fetchTrackFavoriteAll = async (): Promise<TrackType[]> => {
+    const MAX_RETRIES = 2;
+    let retries = 0;
+    const executeRequest = async (): Promise<TrackType[]> => {
+      try {
+        const response = await fetch(`${API_URL}catalog/track/favorite/all/`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage?.getItem('access')}`,
+          },
+        });
+        if (response.status === 401 && retries < MAX_RETRIES) {
+          retries++;
+          if (localStorage.getItem('access')) {
+            await fetchRefreshToken();
+            return await executeRequest();
+          } else {
+            return [];
+          }
+        }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.data.map((item: any, index: number) => ({
+          ...item,
+          id: index,
+          isLike: true,
+        }));
+      } catch (error) {
+        throw error;
+      }
+    };
+    return await executeRequest();
   };
   const fetchTrackCategory = async (id: number) => {
     try {
       let tracks: TrackType[] = await fetchTracksAll();
       const data = await fetch(`${API_URL}catalog/selection/${id}`, {
-        method: "GET",//Массив конкретных номеров треков категории
+        method: "GET",
       })
         .then((response) => response.json()) 
         .then((json) => json.data.items);
@@ -103,7 +96,6 @@ export const useApi = () => {
       if (!response.ok) {
         switch (response.status) {
           case 401:
-            const router = useRouter();
             alert('Ошибка авторизации');
             router.push('/auth/signin');
             break;
@@ -128,7 +120,6 @@ export const useApi = () => {
       if (!response.ok) {
         switch (response.status) {
           case 401:
-            const router = useRouter();
             alert('Ошибка авторизации');
             router.push('/auth/signin');
             break;
@@ -192,6 +183,24 @@ export const useApi = () => {
     .then((response) => response.access)
     return response;
   };
+  const fetchRefreshToken = async () => {
+    try {
+      fetch("https://webdev-music-003b5b991590.herokuapp.com/user/token/refresh/", {
+        method: "POST",
+        body: JSON.stringify({
+          refresh:
+            localStorage.getItem('access'),
+        }),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+      .then((response) => response.json())
+      .then((json) => console.log(json));
+    } catch {
+        return '';
+    }
+  }
   return {
     fetchTracksAll,
     fetchTrackFavoriteAll,
@@ -200,6 +209,7 @@ export const useApi = () => {
     fetchTrackDelete,
     fetchSignIn,
     fetchSignUp,
-    fetchGetToken
+    fetchGetToken,
+    fetchRefreshToken
   };
 };

@@ -2,11 +2,12 @@
 import { useEffect, useState } from 'react';
 import styles from './FilterTracks.module.css';
 import { TrackType } from '@/sharedTypes/types';
-import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setPlaylistForFilter } from '@/store/features/trackSlice';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Filter() {
+  const { theme } = useTheme();
   type BlockListState = "genre" | "author" | "year" | "none";
   const dispatch = useAppDispatch();
   const [blockList, setBlockList] = useState<BlockListState>("none");
@@ -55,43 +56,52 @@ export default function Filter() {
   },[playlist])
   return (
     <>
-    <h2 className={classNames(styles.centerblock__h2,styles.fade_out_text)}>{namePlaylist}</h2>
+    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist}</h2>
     <div className={styles.centerblock__filter}>
-      <div className={styles.filter__title}>Искать по:</div>
+      <div style={{color: theme === 'light' ? 'black' : ''}}  className={styles.filter__title}>Искать по:</div>
         <div style={{position: 'relative', marginRight: '10px'}}>
-          <div onClick={() => changeBlockList("author")} className={styles.filter__button}>
+          <div style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
+            onClick={() => changeBlockList("author")} className={styles.filter__button}>
             исполнителю
             <div className={styles.shine}></div>
           </div>
           {blockList === 'author' && 
-          <div className={styles.filter__block}>
+          <div style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listAuthor.map((item) => (
-                <li onClick={() => setPlaylistWithFilter(item, 'author')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'author')} 
+                className={styles.itemList} 
+                key={item}>{item}</li>
               ))}
             </ul>
           </div>}
           <div className={styles.circleLength}>{listAuthor.length}</div>
         </div>
         <div style={{position: 'relative', marginRight: '10px'}}>
-          <div onClick={() => changeBlockList("year")} className={styles.filter__button}>году выпуска</div>
+          <div style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}}  
+            onClick={() => changeBlockList("year")} className={styles.filter__button}>году выпуска</div>
           {blockList === 'year' && 
-          <div  className={styles.filter__block}>
+          <div style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listYear.map((item) => (
-                <li onClick={() => setPlaylistWithFilter(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'genre')} 
+                className={styles.itemList} 
+                key={item}>{item}</li>
               ))}
             </ul>
           </div>}
           <div className={styles.circleLength}>{listYear.length}</div>
         </div>
         <div style={{position: 'relative'}}>
-          <div onClick={() => changeBlockList("genre")} className={styles.filter__button}>жанру</div>
+          <div style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
+            onClick={() => changeBlockList("genre")} className={styles.filter__button}>жанру</div>
           {blockList === 'genre' && 
-          <div  className={styles.filter__block}>
+          <div style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
             <ul className={styles.filter__list}>
               {listGenre.map((item) => (
-                <li onClick={() => setPlaylistWithFilter(item, 'genre')} className={styles.itemList} key={item}>{item}</li>
+                <li onClick={() => setPlaylistWithFilter(item, 'genre')} 
+                className={styles.itemList}
+                key={item}>{item}</li>
               ))}
             </ul>
           </div>}

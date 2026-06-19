@@ -46,7 +46,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: white;
+    background-color: #B672FF;
   }
 }
 
@@ -92,10 +92,6 @@
   margin-bottom: 12px;
   cursor: pointer;
 }
-.playlist__item:hover{
-  background-color: #4e4e4e;
-  transition: 0.3s;
-}
 
 .playlist__track {
   display: -webkit-box;
@@ -111,6 +107,10 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+.playlist__track:hover {
+  transition: 300ms;
+  background-color: #B672FF;
 }
 
 .track__title {
@@ -143,21 +143,24 @@
   -ms-flex-pack: center;
   justify-content: center;
   margin-right: 17px;
+  transition: 300ms;
 }
 
 .track__titleSvg {
-  width: 18px;
-  height: 17px;
+  width: 19px;
+  height: 18px;
   fill: transparent;
   stroke: #4e4e4e;
+  transition: 300ms;
 }
 
 .track__titleLink {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
+  transition: 300ms;
 }
 
 .track__titleSpan {
@@ -180,11 +183,12 @@
 
 .track__authorLink {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
   text-align: left;
+  transition: 300ms;
 }
 
 .track__album {

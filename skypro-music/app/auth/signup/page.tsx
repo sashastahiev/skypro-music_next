@@ -4,8 +4,10 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useApi } from '@/ts/api';
+import { useRouter } from 'next/navigation';
 
 export default function SignUp() { 
+  const router = useRouter();
   const { fetchGetToken, fetchSignUp} = useApi();
   const [formData, setFormData] = useState({
     login: '',
@@ -14,7 +16,7 @@ export default function SignUp() {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -68,7 +70,7 @@ export default function SignUp() {
       localStorage.setItem('name',formData.name)
       const access = await fetchGetToken(formData.login,formData.password)
       localStorage.setItem('access',access);
-      window.location.href = '/auth/signin';
+      router.push('/music/main');
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
       if (error instanceof TypeError) {

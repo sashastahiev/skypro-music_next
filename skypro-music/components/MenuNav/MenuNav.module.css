@@ -2,6 +2,7 @@
   width: 244px;
   background-color: #181818;
   padding: 20px 0 20px 36px;
+  transition: 300ms;
 }
 
 .nav__logo {
@@ -48,6 +49,14 @@
   width: 100%;
   height: 1px;
   background-color: #d3d3d3;
+  transition: 300ms;
+}
+.burger__lineDark {
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+  background-color: #000000;
+  transition: 300ms;
 }
 
 .menu__list {
@@ -62,12 +71,12 @@
 
 .menu__link {
   color: #ffffff;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
   line-height: 24px;
+  transition: 300ms;
 }
 
-/* Анимация бургер-иконки при открытии */
 .burger__active .burger__line:nth-child(2) {
   opacity: 0;
 }
@@ -78,7 +87,15 @@
   transform: translateY(-5px) rotate(-45deg); /* Поднялась в центр и повернулась */
 }
 
-
+.burger__active .burger__lineDark:nth-child(2) {
+  opacity: 0;
+}
+.burger__active .burger__lineDark:nth-child(1) {
+  transform: translateY(4px) rotate(45deg); /* Спустилась в центр и повернулась */
+}
+.burger__active .burger__lineDark:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg); /* Поднялась в центр и повернулась */
+}
 
 .menu__open {
   transform: scaleY(1);
@@ -88,3 +105,12 @@
 .menu__link:hover {
   color: #007bff;
 }
+.Themeimg__svg{
+  cursor: pointer;
+  width: 40px;
+  height: 39px;
+}
+.Themeimg__svg:active {
+  transform: scale(0.9);
+}
+

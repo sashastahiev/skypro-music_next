@@ -2,7 +2,10 @@
 import React from 'react';
 import MenuNav from '@/components/MenuNav/MenuNav';
 import styles from './layout.module.css';
-import Sibebar from '@/components/Sibebar/Sibebar';
+import Sidebar from '@/components/Sibebar/Sibebar';
+import Search from '@/components/SearchFilter/search';
+import { ThemeProvider } from '@/context/ThemeProvider';
+import { useTheme } from '@/context/ThemeContext'; 
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,30 +13,33 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <>
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
+    <ThemeProvider>
+      <ThemeContent>{children}</ThemeContent>
+    </ThemeProvider>
+  );
+}
+
+const ThemeContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { theme } = useTheme();
+
+  return (
+    <div style={{ backgroundColor: theme === 'light' ? 'rgb(246, 245, 243)' : ''}} className={styles.wrapper}>
+      <div style={{ backgroundColor: theme === 'light' ? 'rgb(246, 245, 243)' : ''}} className={styles.container}>
         <main className={styles.main}>
           <MenuNav />
-          <div className={styles.centerblock}>
-              <div className={styles.centerblock__search}>
+          <div style={{ backgroundColor: theme === 'light' ? 'white' : 'black'}} className={styles.centerblock}>
+            <div className={styles.centerblock__search}>
               <svg className={styles.search__svg}>
-                  <use xlinkHref="/image/icon/sprite.svg#icon-search"></use>
+                <use xlinkHref="/image/icon/sprite.svg#icon-search"></use>
               </svg>
-              <input
-                  className={styles.search__text}
-                  type="search"
-                  placeholder="Поиск"
-                  name="search"
-              />
-              </div>
-              <main>{children}</main>
+              <Search />
+            </div>
+            <main>{children}</main>
           </div>
-          <Sibebar />
+          <Sidebar />
         </main>
         <footer className={styles.footer}></footer>
       </div>
     </div>
-    </>
   );
-}
+};

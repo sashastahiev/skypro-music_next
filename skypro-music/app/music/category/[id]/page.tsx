@@ -9,6 +9,7 @@ import { TrackType } from '@/sharedTypes/types';
 import { setPlaylist, setNamePlaylist, setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
 import BarTrack from '@/components/BarTrack/BarTrack';
+
 export default function Category() {
   const param = useParams();
   const id = param.id ? param.id.toString() : null;

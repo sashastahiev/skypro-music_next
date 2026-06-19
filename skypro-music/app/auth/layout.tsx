@@ -1,4 +1,3 @@
-// components/Layout.tsx
 'use client'
 import styles from './layout.module.css';
 import React from 'react';

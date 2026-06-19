@@ -28,11 +28,12 @@
   -ms-grid-row-span: 2;
   grid-column: 1;
   grid-area: image;
+  transition: 300ms;
 }
 
 .trackPlay__svg {
-  width: 18px;
-  height: 17px;
+  width: 19px;
+  height: 18px;
   fill: transparent;
   stroke: #4e4e4e;
 }

@@ -7,8 +7,10 @@ import { useEffect, useRef, useState } from 'react';
 import { setCurrentTrack, setIsLoop, setIsPlay, setIsShuffle } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useAudio } from '@/context/AudioContext';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function BarTrack() {
+  const { theme } = useTheme();
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const isLooptrack = useAppSelector((state) => state.tracks.isLoop);
@@ -157,7 +159,7 @@ const nextTrack = async () => {
 
   return (
     <>
-      <div className={styles.bar}>
+      <div style={{backgroundColor: theme === 'light' ? 'white' : ''}} className={styles.bar}>
         <audio
           ref={audioRef}
           src={currentTrack.track_file}
@@ -230,7 +232,7 @@ const nextTrack = async () => {
                     </div>
                 </div>
                 <div className={styles.bar__volumeBlock}>
-                  <div style={{ color: 'white', marginRight: '20px' }}>
+                  <div style={{ color: theme === 'dark' ? 'white' : 'black', marginRight: '20px' }}>
                     {formatDuration(
                       Math.round(audioRef.current ? audioRef.current.currentTime : 0)
                     )}/

@@ -6,8 +6,11 @@ import { setCurrentTrack, setIsPlay } from '@/store/features/trackSlice';
 import { TrackType } from '@/sharedTypes/types';
 import { useEffect, useState } from 'react';
 import { useApi } from '@/ts/api';
+import formatDuration from '@/utils/formatDurations'
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Playlist() {
+  const { theme } = useTheme();
   const dispatch = useAppDispatch();
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter);
   const namePlaylist: string = useAppSelector((state) => state.tracks.namePlaylist)
@@ -16,11 +19,7 @@ export default function Playlist() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const isPlayTrackInd = useAppSelector((state) => state.tracks.isPlay);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  function formatDuration(seconds: number) {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-  };
+
   const onClickTrack = async (item: TrackType) => {
     if (isLoading) return;
       await dispatch(setIsPlay(false));
@@ -34,10 +33,12 @@ export default function Playlist() {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     setTracks(playlist);
     setIsLoading(false);
   },[playlist])
+  
   const setIsLike = async (e: React.MouseEvent, item: TrackType) => {
     e.stopPropagation()
     const updatedItem: TrackType = { ...item, isLike: !item.isLike };
@@ -85,20 +86,21 @@ export default function Playlist() {
             >
         <div className={styles.playlist__track}>
           <div className={styles.track__title}>
-            <div className={styles.track__titleImage}>
+            <div style={{backgroundColor: theme === 'light' ? '#F6F4F4' : ''}} className={styles.track__titleImage}>
               <svg className={styles.track__titleSvg}>
-                <use xlinkHref="/image/icon/sprite.svg#icon-note"></use>
+                {theme === 'dark' ? <use xlinkHref="/image/icon/sprite.svg#icon-note"></use> :
+                <use xlinkHref="/image/icon/noteLight.svg"></use>}
               </svg>
               {currentTrack?._id === item._id && <div className={isPlayTrackInd ? styles.pulsing_circle : styles.pulsing_circle_nonActive}></div>}
             </div>
             <div className={styles.track__title}>
-              <a className={styles.track__titleLink} href="#">
+              <a style={{color: theme === 'light' ? 'black' : ''}} className={styles.track__titleLink} href="#">
                 {item.name} <span className={styles.track__titleSpan}></span>
               </a>
             </div>
           </div>
           <div className={styles.track__author}>
-            <a className={styles.track__authorLink} href="#">
+            <a style={{color: theme === 'light' ? 'black' : ''}} className={styles.track__authorLink} href="#">
               {item.author}
             </a>
           </div>
