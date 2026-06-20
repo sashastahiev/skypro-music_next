@@ -29,6 +29,7 @@
   color: #ffffff;
   margin-right: 16px;
   transition: 300ms;
+  user-select: none;
 }
 
 .sidebar__icon {

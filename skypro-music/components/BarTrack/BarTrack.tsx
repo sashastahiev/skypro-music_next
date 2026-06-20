@@ -68,6 +68,7 @@ export default function BarTrack() {
   };
 const nextTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
+    console.log(tracks)
     let currentId: number = await currentTrack.id;
     let nextId: number;
     if (isShuffleTrack) {
@@ -92,6 +93,7 @@ const nextTrack = async () => {
       console.error('Ошибка воспроизведения следующего трека:', error);
       await dispatch(setIsPlay(false));
     }
+    console.log(nextId)
   };
   const prevTrack = async () => {
     if (!audioRef.current || !currentTrack) return;
@@ -160,114 +162,114 @@ const nextTrack = async () => {
 
   return (
     <>
-      <div style={{backgroundColor: theme === 'light' ? 'white' : ''}} className={styles.bar}>
-        <audio
-          ref={audioRef}
-          src={currentTrack.track_file}
-          loop={isLooptrack}
-          onEnded={onEndedTrack}
-          onTimeUpdate={handleTimeUpdate}
-          preload="auto"
-          onLoadedData={handleLoadedData}
-        />
-            <div className={styles.bar__content}>
-                <div
-                    className={styles.progressContainer}
-                    onClick={handleProgressClick}
-                >
-                    <div
-                    className={styles.bar__playerProgress}
-                    ref={progressBarRef}
-                    >
-                    <div
-                        className={styles.progressFill}
-                        style={{ width: `${progress}%` }}
-                    ></div>
+    <div style={{backgroundColor: theme === 'light' ? 'white' : ''}} className={styles.bar}>
+      <audio
+        ref={audioRef}
+        src={currentTrack.track_file}
+        loop={isLooptrack}
+        onEnded={onEndedTrack}
+        onTimeUpdate={handleTimeUpdate}
+        preload="auto"
+        onLoadedData={handleLoadedData}
+      />
+        <div className={styles.bar__content}>
+          <div
+              className={styles.progressContainer}
+              onClick={handleProgressClick}
+          >
+            <div
+            className={styles.bar__playerProgress}
+            ref={progressBarRef}
+            >
+              <div
+                  className={styles.progressFill}
+                  style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+          </div>
+          <div className={styles.bar__playerBlock}>
+            <div className={styles.bar__player}>
+                <div className={styles.player__controls}>
+                <div onClick={prevTrack} className={cn(styles.player__btnPrev, styles.btn)}>
+                    <svg className={styles.player__btnPrevSvg}>
+                    <use xlinkHref="/image/icon/sprite.svg#icon-prev"></use>
+                    </svg>
+                </div>
+                { isLoading ? <div className={styles.loader_spinner}></div> : 
+                <div onClick={() => togglePlay()} className={cn(styles.player__btnPlay, styles.btn)}>
+                    {!isPlayTrackInd ?
+                    <svg className={styles.player__btnPlaySvg}>
+                        <use xlinkHref="/image/icon/sprite.svg#icon-play"></use>
+                    </svg>
+                    :
+                    <svg className={styles.player__btnPlaySvg}>
+                        <use xlinkHref="/image/icon/pause.svg"></use>
+                    </svg>}
+                </div>}
+                <div onClick={nextTrack} className={cn(styles.player__btnNext, styles.btn)}>
+                    <svg className={styles.player__btnNextSvg}>
+                    <use xlinkHref="/image/icon/sprite.svg#icon-next"></use>
+                    </svg>
+                </div>
+                <div onClick={toggleIsLoop}  className={cn(styles.player__btnRepeat, {[styles.btnIcon]: !isLooptrack})}>
+                    <svg className={!isLooptrack ? styles.player__btnRepeatSvg : styles.btnActive}>
+                    <use xlinkHref="/image/icon/sprite.svg#icon-repeat"></use>
+                    </svg>
+                </div>
+                <div  onClick={toggleIsShuffle} className={cn(styles.player__btnShuffle, {[styles.btnIcon]: !isShuffleTrack})}>
+                    <svg className={!isShuffleTrack ? styles.player__btnShuffleSvg : styles.btnShuffleActive}>
+                    <use xlinkHref="/image/icon/sprite.svg#icon-shuffle"></use>
+                    </svg>
+                </div>
+                </div>
+                <div className={styles.player__trackPlay}>
+                <Track />
+                <div className={styles.trackPlay__dislike}>
+                    <div className={cn(styles.player__btnShuffle, styles.btnIcon)}>
+                    <svg className={styles.trackPlay__likeSvg}>
+                        {currentTrack.isLike ? <use xlinkHref="/image/icon/LikeActive.svg"></use> :
+                        <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>}
+                    </svg>
                     </div>
                 </div>
-                <div className={styles.bar__playerBlock}>
-                <div className={styles.bar__player}>
-                    <div className={styles.player__controls}>
-                    <div onClick={prevTrack} className={cn(styles.player__btnPrev, styles.btn)}>
-                        <svg className={styles.player__btnPrevSvg}>
-                        <use xlinkHref="/image/icon/sprite.svg#icon-prev"></use>
-                        </svg>
-                    </div>
-                    { isLoading ? <div className={styles.loader_spinner}></div> : 
-                    <div onClick={() => togglePlay()} className={cn(styles.player__btnPlay, styles.btn)}>
-                        {!isPlayTrackInd ?
-                        <svg className={styles.player__btnPlaySvg}>
-                            <use xlinkHref="/image/icon/sprite.svg#icon-play"></use>
-                        </svg>
-                         :
-                         <svg className={styles.player__btnPlaySvg}>
-                            <use xlinkHref="/image/icon/pause.svg"></use>
-                        </svg>}
-                    </div>}
-                    <div onClick={nextTrack} className={cn(styles.player__btnNext, styles.btn)}>
-                        <svg className={styles.player__btnNextSvg}>
-                        <use xlinkHref="/image/icon/sprite.svg#icon-next"></use>
-                        </svg>
-                    </div>
-                    <div onClick={toggleIsLoop}  className={cn(styles.player__btnRepeat, {[styles.btnIcon]: !isLooptrack})}>
-                        <svg className={!isLooptrack ? styles.player__btnRepeatSvg : styles.btnActive}>
-                        <use xlinkHref="/image/icon/sprite.svg#icon-repeat"></use>
-                        </svg>
-                    </div>
-                    <div  onClick={toggleIsShuffle} className={cn(styles.player__btnShuffle, {[styles.btnIcon]: !isShuffleTrack})}>
-                        <svg className={!isShuffleTrack ? styles.player__btnShuffleSvg : styles.btnShuffleActive}>
-                        <use xlinkHref="/image/icon/sprite.svg#icon-shuffle"></use>
-                        </svg>
-                    </div>
-                    </div>
-                    <div className={styles.player__trackPlay}>
-                    <Track />
-                    <div className={styles.trackPlay__dislike}>
-                        <div className={cn(styles.player__btnShuffle, styles.btnIcon)}>
-                        <svg className={styles.trackPlay__likeSvg}>
-                            {currentTrack.isLike ? <use xlinkHref="/image/icon/LikeActive.svg"></use> :
-                            <use xlinkHref="/image/icon/sprite.svg#icon-like"></use>}
-                        </svg>
-                        </div>
-                    </div>
-                    </div>
                 </div>
-                <div className={styles.bar__volumeBlock}>
-                  <div style={{ color: theme === 'dark' ? 'white' : 'black', marginRight: '20px' , userSelect: 'none'}}>
-                    {formatDuration(
-                      Math.round(audioRef.current ? audioRef.current.currentTime : 0)
-                    )}/
-                    {formatDuration(
-                      Math.round(audioRef.current && !isNaN(audioRef.current.duration)
-                        ? audioRef.current.duration
-                        : 0
-                      )
-                    )}
+            </div>
+            <div className={styles.bar__volumeBlock}>
+              <div style={{ color: theme === 'dark' ? 'white' : 'black', marginRight: '20px' , userSelect: 'none'}}>
+                {formatDuration(
+                  Math.round(audioRef.current ? audioRef.current.currentTime : 0)
+                )}/
+                {formatDuration(
+                  Math.round(audioRef.current && !isNaN(audioRef.current.duration)
+                    ? audioRef.current.duration
+                    : 0
+                  )
+                )}
+              </div>
+                <div className={styles.volume__content}>
+                  <div className={styles.volume__image}>
+                    <svg className={styles.volume__svg}>
+                      <use xlinkHref="/image/icon/sprite.svg#icon-volume"></use>
+                    </svg>
                   </div>
-                    <div className={styles.volume__content}>
-                    <div className={styles.volume__image}>
-                      <svg className={styles.volume__svg}>
-                        <use xlinkHref="/image/icon/sprite.svg#icon-volume"></use>
-                      </svg>
-                    </div>
-                    <div className={cn(styles.volume__progress, styles.btn)}>
-                        <input
-                        ref={volumeSliderRef}
-                        className={cn(styles.volume__progressLine, styles.btn)}
-                        type="range"
-                        name="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        defaultValue="0.2"
-                        onChange={handleVolumeChange}
-                        />
-                    </div>
-                    </div>
-                </div>
+                  <div className={cn(styles.volume__progress, styles.btn)}>
+                      <input
+                      ref={volumeSliderRef}
+                      className={cn(styles.volume__progressLine, styles.btn)}
+                      type="range"
+                      name="range"
+                      min="0"
+                      max="1"
+                      step="0.01"
+                      defaultValue="0.2"
+                      onChange={handleVolumeChange}
+                      />
+                  </div>
                 </div>
             </div>
-            </div>
-        </>
-    );
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

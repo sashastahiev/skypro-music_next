@@ -48,6 +48,10 @@ export default function Filter() {
     }
     else
       tracksWithFilter = paylistFilter.filter((item) => item.genre.includes(filter));
+    tracksWithFilter = tracksWithFilter.map((item, index) => ({
+      ...item,
+      id: index,
+    }))
     await dispatch(setPlaylistForFilter(tracksWithFilter));
     setDeleteFilter(true);
   }

@@ -226,6 +226,7 @@
   width: 109px;
   display: flex;
   align-items: center;
+  user-select: none;
 }
 
 .volume__progressLine {
@@ -236,6 +237,7 @@
   border-radius: 5px;
   outline: none;
   cursor: pointer;
+  user-select: none;
 }
 
 .volume__progressLine::-webkit-slider-runnable-track {
