@@ -184,24 +184,23 @@ export const useApi = () => {
       else 
         return response 
     }).then((response) => response.json())
-    .then((response) => response.access)
     return response;
   };
   const fetchRefreshToken = async () => {
     try {
-      const responce = await fetch(`${API_URL}user/token/refresh/`, {
+      const response = await fetch(`${API_URL}user/token/refresh/`, {
         method: "POST",
         body: JSON.stringify({
           refresh:
-            localStorage.getItem('access'),
+            localStorage.getItem('refresh'),
         }),
         headers: {
           "content-type": "application/json",
         },
       })
       .then((response) => response.json())
-      .then((response) => response.access);
-      localStorage.setItem('access',responce);
+      .then(response => response.access)
+      return response;
     } catch {
         return;
     }

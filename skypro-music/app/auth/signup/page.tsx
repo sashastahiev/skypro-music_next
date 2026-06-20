@@ -69,7 +69,8 @@ export default function SignUp() {
       localStorage.setItem('email', formData.login)
       localStorage.setItem('name',formData.name)
       const access = await fetchGetToken(formData.login,formData.password)
-      localStorage.setItem('access',access);
+      localStorage.setItem('access',access.access);
+      localStorage.setItem('refresh',access.refresh);
       router.push('/music/main');
     } catch (error: unknown) {
       let errorMessage = 'Произошла непредвиденная ошибка';
