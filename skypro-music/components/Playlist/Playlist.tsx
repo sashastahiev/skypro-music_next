@@ -73,14 +73,14 @@ export default function Playlist() {
         </div>
         {!isLoading ? 
         <div className={styles.content__playlist}>
-          {tracks.map((item, index) => (
+          {tracks.map((item) => (
             <div
               onClick={() => onClickTrack(item)}
               className={cn(
                 styles.playlist__item,
                 isLoading && styles.playlist__item_disabled
               )}
-              key={index}
+              key={item.id}
               style={{
                 pointerEvents: isLoading ? 'none' : 'auto'
               }}

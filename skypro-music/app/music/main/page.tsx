@@ -7,7 +7,6 @@ import { useApi } from '@/ts/api';
 import { useAppDispatch } from '@/store/store';
 import { setNamePlaylist, setPlaylist, setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
-import BarTrack from '@/components/BarTrack/BarTrack';
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -26,7 +25,6 @@ export default function Home() {
     <Filter/>
     <AudioProvider>
         <Playlist />
-        <BarTrack />
     </AudioProvider>
     </>
   );

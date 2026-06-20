@@ -17,7 +17,7 @@ export default function BarTrack() {
   const isShuffleTrack = useAppSelector((state) => state.tracks.isShuffle);
   const { audioRef } = useAudio();
   const volumeSliderRef = useRef<HTMLInputElement>(null);
-  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist)
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter)
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const dispatch = useAppDispatch();
   const [progress, setProgress] = useState<number>(0);
@@ -75,7 +75,7 @@ const nextTrack = async () => {
         nextId = Math.floor(Math.random() * tracks.length);
       } while (nextId === currentId && tracks.length > 1);
     } else {
-      nextId = (currentId + 1) % tracks.length;
+      nextId = (currentId + 1 + tracks.length) % tracks.length;
     }
     const nextTrack: TrackType = tracks[nextId];
     await dispatch(setCurrentTrack(nextTrack));
@@ -100,6 +100,7 @@ const nextTrack = async () => {
     let prevId: number = (currentId - 1 + tracks.length) % tracks.length;
     const prevTrack: TrackType = tracks[prevId];
     await dispatch(setCurrentTrack(prevTrack));
+    await dispatch(setIsPlay(true));
     try {
       setIsLoading(true);
       await audioRef.current.load();
@@ -232,7 +233,7 @@ const nextTrack = async () => {
                     </div>
                 </div>
                 <div className={styles.bar__volumeBlock}>
-                  <div style={{ color: theme === 'dark' ? 'white' : 'black', marginRight: '20px' }}>
+                  <div style={{ color: theme === 'dark' ? 'white' : 'black', marginRight: '20px' , userSelect: 'none'}}>
                     {formatDuration(
                       Math.round(audioRef.current ? audioRef.current.currentTime : 0)
                     )}/

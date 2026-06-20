@@ -58,6 +58,7 @@
   letter-spacing: 2px;
   color: #696969;
   text-transform: uppercase;
+  user-select: none;
 }
 
 .playlistTitle__svg {
@@ -166,6 +167,7 @@
   line-height: 24px;
   color: #ffffff;
   transition: 300ms;
+  user-select: none;
 }
 
 .track__titleSpan {
@@ -174,6 +176,7 @@
   font-size: 16px;
   line-height: 24px;
   color: #4e4e4e;
+  user-select: none;
 }
 
 .track__author {
@@ -184,6 +187,7 @@
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  user-select: none;
 }
 
 .track__authorLink {
@@ -198,6 +202,7 @@
 
 .track__album {
   width: 245px;
+  user-select: none;
 }
 
 .track__albumLink {
@@ -226,6 +231,7 @@
   text-align: right;
   color: #696969;
   padding-right: 25px;
+  user-select: none;
 }
 .pulsing_circle {
   position: absolute;

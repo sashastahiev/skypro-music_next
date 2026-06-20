@@ -34,7 +34,6 @@ export default function Category() {
     <Filter/>
     <AudioProvider>
         <Playlist/>
-        <BarTrack />
     </AudioProvider>
     </>
   );

@@ -13,14 +13,14 @@ export default function Track() {
             </svg>
         </div>
         <div className={styles.trackPlay__author}>
-            <a style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__authorLink} href="">
+            <div style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__authorLink}>
                 {currentTrack?.author}
-            </a>
+            </div>
         </div>
         <div className={styles.trackPlay__album}>
-            <a style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__albumLink} href="">
+            <div style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__albumLink}>
                 {currentTrack?.album}
-            </a>
+            </div>
         </div>
     </div>
   )

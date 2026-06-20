@@ -6,6 +6,8 @@ import Sidebar from '@/components/Sibebar/Sibebar';
 import Search from '@/components/SearchFilter/search';
 import { ThemeProvider } from '@/context/ThemeProvider';
 import { useTheme } from '@/context/ThemeContext'; 
+import { AudioProvider } from '@/context/AudioContext';
+import BarTrack from '@/components/BarTrack/BarTrack';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -35,6 +37,9 @@ const ThemeContent: React.FC<{ children: React.ReactNode }> = ({ children }) => 
               <Search />
             </div>
             <main>{children}</main>
+            <AudioProvider>
+              <BarTrack />
+            </AudioProvider>
           </div>
           <Sidebar />
         </main>

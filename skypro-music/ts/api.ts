@@ -76,6 +76,10 @@ export const useApi = () => {
         .then((json) => json.data.items);
       const idSet = new Set(data);
       let filteredTracks: TrackType[] = tracks.filter(track => idSet.has(track._id));
+      filteredTracks = filteredTracks.map((item, index) => ({
+        ...item,
+        id: index
+      }))
       return filteredTracks ? filteredTracks : [];
     } catch (error) {
       console.log(`Ошибка при получении треков категории ${id}:`, error);

@@ -7,6 +7,17 @@
   letter-spacing: -0.8px;
   margin-bottom: 45px;
   transition: 300ms;
+  user-select: none; 
+}
+.filter_ChangePlaylist {
+  display: flex;
+  justify-content: space-between;
+}
+.filter_Sort {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 51px;
 }
 .centerblock__filter {
   display: -webkit-box;
@@ -22,6 +33,8 @@
   margin-bottom: 51px;
 }
 .filter__title {
+  display: flex;
+  align-items: center;
   color: #fff;
   font-style: normal;
   font-weight: 400;
@@ -29,6 +42,7 @@
   line-height: 24px;
   margin-right: 15px;
   transition: 300ms;
+  user-select: none;
 }
 .filter__button {
   position: relative;
@@ -42,6 +56,7 @@
   padding: 6px 20px;
   cursor: pointer;
   transition: 300ms;
+  user-select: none; 
 }
 .filter__buttonFilter {
   position: relative;
@@ -75,6 +90,7 @@
   border-radius: 12px;
   margin-top: 10px;
   transition: 300ms;
+  user-select: none; 
 }
 .filter__list {
   color: white;
@@ -122,6 +138,7 @@
   font-weight: 500;
   font-size: 13px;
   color: white;
+  user-select: none; 
 }
 .fade_out_text {
   position: relative;

@@ -52,6 +52,7 @@
   line-height: 24px;
   color: #ffffff;
   white-space: nowrap;
+  user-select: none; 
 }
 
 .trackPlay__album {
@@ -67,4 +68,5 @@
   font-size: 13px;
   line-height: 24px;
   color: #ffffff;
+  user-select: none; 
 }

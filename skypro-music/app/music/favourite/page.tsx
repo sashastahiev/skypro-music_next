@@ -7,7 +7,6 @@ import { useApi } from '@/ts/api';
 import { TrackType } from '@/sharedTypes/types';
 import { setPlaylist, setNamePlaylist, setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useEffect } from 'react';
-import BarTrack from '@/components/BarTrack/BarTrack';
 export default function Favorite() {
   const dispatch = useAppDispatch();
     const {fetchTrackFavoriteAll} = useApi();
@@ -24,10 +23,9 @@ export default function Favorite() {
     },[])
   return (
     <>
-    <Filter/>
+    <Filter />
     <AudioProvider>
         <Playlist />
-        <BarTrack />
     </AudioProvider>
     </>
   );
