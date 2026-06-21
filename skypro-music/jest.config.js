@@ -12,6 +12,6 @@ module.exports = {
     '\\.(css|scss|sass)$': 'identity-obj-proxy',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
-  },
+    '^.+.tsx?$': ['ts-jest']
+  }
 };

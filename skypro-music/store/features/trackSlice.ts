@@ -5,7 +5,7 @@ type initialStateType = {
   isPlay: boolean,
   isLoop: boolean,
   isShuffle: boolean,
-  namePlaylist: string,
+  namePlaylist: string | null, 
   Playlist: TrackType[],
   PlaylistForFilter: TrackType[],
 };
@@ -15,7 +15,7 @@ const initialState: initialStateType = {
   isPlay: false,
   isLoop: false,
   isShuffle: false,
-  namePlaylist: 'Треки',
+  namePlaylist: null,
   Playlist: [],
   PlaylistForFilter: [],
 };

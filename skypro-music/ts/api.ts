@@ -60,8 +60,8 @@ export const useApi = () => {
           id: index,
           isLike: true,
         }));
-      } catch (error) {
-        throw error;
+      } catch {
+        return [];
       }
     };
     return await executeRequest();
@@ -200,7 +200,7 @@ export const useApi = () => {
       })
       .then((response) => response.json())
       .then(response => response.access)
-      return response;
+      localStorage.setItem('access',response)
     } catch {
         return;
     }

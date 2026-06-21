@@ -5,6 +5,8 @@ import { TrackType } from '@/sharedTypes/types';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useTheme } from '@/context/ThemeContext';
+import {SkeletonTheme} from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 export default function Filter() {
   const { theme } = useTheme();
@@ -14,7 +16,7 @@ export default function Filter() {
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
   const paylistFilter: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter)
   const name: string | null = useAppSelector((state) => state.tracks.namePlaylist);
-  const [namePlaylist, setName] = useState<string>('');
+  const [namePlaylist, setName] = useState<string | null>(null);
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);
   const [listYear, setlistYear] = useState<string[]>([]);
@@ -98,7 +100,7 @@ export default function Filter() {
   }, []);
   return (
     <>
-    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist}</h2>
+    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist || <SkeletonTheme baseColor="#202020" highlightColor="#444"/>}</h2>
     <div className={styles.filter_ChangePlaylist}>
       <div className={styles.centerblock__filter}>
         <div style={{color: theme === 'light' ? 'black' : ''}}  className={styles.filter__title}>Искать по:</div>
