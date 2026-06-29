@@ -38,8 +38,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "jest.setup.ts", "components/Sibebar/Sibebar.test.tsx", "jest.config.js"  ],
+    "**/*.mts",
+    "jest.setup.ts", 
+    "components/Sibebar/Sibebar.test.tsx", 
+    "jest.config.js"],
   "exclude": [
     "node_modules",
     "dist"
