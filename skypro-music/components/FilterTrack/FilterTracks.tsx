@@ -53,23 +53,35 @@ export default function Filter() {
     setDeleteFilter(false);
     setSelectItemFilter((prev) => ({...prev,genre:[],author:[],release_date:[]}));
   }
-  const setPlaylistWithFilter = async (filter: string, name: "genre" | "author" | "release_date") => {
-    let tracksWithFilter: TrackType[] = [];
-    if (!selectItemFilter[name].includes(filter))
-      await selectItemFilter[name].push(filter);
-    else
-      await setSelectItemFilter((prev) => ({...prev,[name]: prev[name].filter((g) => g != filter)}));
-    if (name === "author" || name === "release_date")
-      tracksWithFilter = playlist.filter((item) => selectItemFilter[name].includes(item[name]));
+  const setPlaylistWithFilter = async (filter: string, name: 'genre' | 'author' | 'release_date') => {
+    const currentValues = selectItemFilter[name];
+    let newValues: string[];
+    if (!currentValues.includes(filter))
+      newValues = [...currentValues, filter];
     else 
-      tracksWithFilter = playlist.filter((item) => item.genre.some((g) => selectItemFilter.genre.includes(g)));
+      newValues = currentValues.filter((v) => v !== filter);
+    const newSelectItemFilter = {
+      ...selectItemFilter,
+      [name]: newValues,
+    };
+    let tracksWithFilter: TrackType[];
+    if (name === 'author' || name === 'release_date') {
+      tracksWithFilter = playlist.filter((item) =>
+        newValues.includes(item[name])
+      );
+    } else {
+      tracksWithFilter = playlist.filter((item) =>
+        item.genre.some((g) => newValues.includes(g))
+      );
+    }
     tracksWithFilter = tracksWithFilter.map((item, index) => ({
       ...item,
       id: index,
-    }))
+    }));
+    setSelectItemFilter(newSelectItemFilter);
     await dispatch(setPlaylistForFilter(tracksWithFilter));
     setDeleteFilter(true);
-  }
+  };
   const setFilter = () => {
     setlistGenre([...new Set(playlist.flatMap(track => track.genre))]);
     setlistAuthor([...new Set(playlist.map(track => track.author))]);
