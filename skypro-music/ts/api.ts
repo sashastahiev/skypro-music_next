@@ -55,7 +55,7 @@ export const useApi = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        return data.data.map((item: any, index: number) => ({
+        return data.data.map((item: TrackType, index: number) => ({
           ...item,
           id: index,
           isLike: true,

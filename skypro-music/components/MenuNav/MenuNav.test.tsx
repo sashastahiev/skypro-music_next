@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import MenuNav from './MenuNav';
 
 jest.mock('next/link', () => {
-    const MockLink = ({ href, children, onClick, ...rest }: any) => (
+    const MockLink = ({ href, children, onClick, ...rest }) => (
         <a href={href} onClick={onClick} {...rest}>
             {children}
         </a>
@@ -12,7 +12,7 @@ jest.mock('next/link', () => {
 });
 
 jest.mock('next/image', () => {
-    const MockImage = ({ src, alt, ...rest }: any) => (
+    const MockImage = ({ src, alt, ...rest }) => (
         <img src={src} alt={alt} {...rest} />
     );
     MockImage.displayName = 'MockImage';

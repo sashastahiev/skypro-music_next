@@ -5,8 +5,12 @@ import { TrackType } from '@/sharedTypes/types';
 import { useAppDispatch, useAppSelector } from '@/store/store';
 import { setPlaylistForFilter } from '@/store/features/trackSlice';
 import { useTheme } from '@/context/ThemeContext';
-import {SkeletonTheme} from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+
+type selectFilter = {
+  genre: string[],
+  release_date: string[],
+  author: string[]
+}
 
 export default function Filter() {
   const { theme } = useTheme();
@@ -14,14 +18,19 @@ export default function Filter() {
   const dispatch = useAppDispatch();
   const [blockList, setBlockList] = useState<BlockListState>("none");
   const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
-  const paylistFilter: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter)
+  const playlistFilter: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter)
   const name: string | null = useAppSelector((state) => state.tracks.namePlaylist);
   const [namePlaylist, setName] = useState<string | null>(null);
   const [listGenre,setlistGenre] = useState<string[]>([]);
   const [listAuthor, setlistAuthor] = useState<string[]>([]);
   const [listYear, setlistYear] = useState<string[]>([]);
   const [DeleteFilter,setDeleteFilter] = useState<boolean>(false);
-  const [sortName, setSortName] = useState<string>('названию')
+  const [sortName, setSortName] = useState<string>('названию');
+  let [selectItemFilter, setSelectItemFilter] = useState<selectFilter>({
+    genre: [],
+    release_date: [],
+    author: [],
+  });
 
   const authorBlockRef = useRef<HTMLDivElement>(null);
   const yearBlockRef = useRef<HTMLDivElement>(null);
@@ -42,14 +51,18 @@ export default function Filter() {
     dispatch(setPlaylistForFilter(playlist));
     setBlockList("none");
     setDeleteFilter(false);
+    setSelectItemFilter((prev) => ({...prev,genre:[],author:[],release_date:[]}));
   }
-  const setPlaylistWithFilter = async (filter: string, name: string) => {
+  const setPlaylistWithFilter = async (filter: string, name: "genre" | "author" | "release_date") => {
     let tracksWithFilter: TrackType[] = [];
-    if (name === 'author' || name === 'release_date'){
-      tracksWithFilter = paylistFilter.filter((item) => item[name] === filter)
-    }
+    if (!selectItemFilter[name].includes(filter))
+      await selectItemFilter[name].push(filter);
     else
-      tracksWithFilter = paylistFilter.filter((item) => item.genre.includes(filter));
+      await setSelectItemFilter((prev) => ({...prev,[name]: prev[name].filter((g) => g != filter)}));
+    if (name === "author" || name === "release_date")
+      tracksWithFilter = playlist.filter((item) => selectItemFilter[name].includes(item[name]));
+    else 
+      tracksWithFilter = playlist.filter((item) => item.genre.some((g) => selectItemFilter.genre.includes(g)));
     tracksWithFilter = tracksWithFilter.map((item, index) => ({
       ...item,
       id: index,
@@ -63,7 +76,7 @@ export default function Filter() {
     setlistYear([...new Set(playlist.map(track => track.release_date))]);
   }
   const SortFilter = async (str: 'name' | 'album' | 'author', name: string) => {
-    let sortedItems: TrackType[] = [...paylistFilter];
+    let sortedItems: TrackType[] = [...playlistFilter];
     sortedItems = sortedItems.sort((a, b) => a[str].localeCompare(b[str]));
     let finalItems: TrackType[] = sortedItems.map((item, index) => ({
       ...item,
@@ -100,7 +113,7 @@ export default function Filter() {
   }, []);
   return (
     <>
-    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist || <SkeletonTheme baseColor="#202020" highlightColor="#444"/>}</h2>
+    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist}</h2>
     <div className={styles.filter_ChangePlaylist}>
       <div className={styles.centerblock__filter}>
         <div style={{color: theme === 'light' ? 'black' : ''}}  className={styles.filter__title}>Искать по:</div>
@@ -116,11 +129,12 @@ export default function Filter() {
                 {listAuthor.map((item) => (
                   <li onClick={() => setPlaylistWithFilter(item, 'author')} 
                   className={styles.itemList} 
+                  style={{backgroundColor: selectItemFilter.author.includes(item) ? "#201f1f" : ''}}
                   key={item}>{item}</li>
                 ))}
               </ul>
             </div>}
-            <div className={styles.circleLength}>{listAuthor.length}</div>
+            {selectItemFilter.author.length > 0 && <div className={styles.circleLength}>{selectItemFilter.author.length}</div>}
           </div>
           <div style={{position: 'relative', marginRight: '10px'}}>
             <div ref={genreButtonRef} style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}}  
@@ -129,13 +143,14 @@ export default function Filter() {
             <div ref={genreBlockRef} style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
               <ul className={styles.filter__list}>
                 {listYear.map((item) => (
-                  <li onClick={() => setPlaylistWithFilter(item, 'genre')} 
+                  <li onClick={() => setPlaylistWithFilter(item, 'release_date')} 
                   className={styles.itemList} 
+                  style={{backgroundColor: selectItemFilter.release_date.includes(item) ? "#201f1f" : ''}}
                   key={item}>{item}</li>
                 ))}
               </ul>
             </div>}
-            <div className={styles.circleLength}>{listYear.length}</div>
+            {selectItemFilter.release_date.length > 0 && <div className={styles.circleLength}>{selectItemFilter.release_date.length}</div>}
           </div>
           <div style={{position: 'relative'}}>
             <div ref={yearButtonRef} style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
@@ -146,11 +161,12 @@ export default function Filter() {
                 {listGenre.map((item) => (
                   <li onClick={() => setPlaylistWithFilter(item, 'genre')} 
                   className={styles.itemList}
+                  style={{backgroundColor: selectItemFilter.genre.includes(item) ? "#201f1f" : ''}}
                   key={item}>{item}</li>
                 ))}
               </ul>
             </div>}
-            <div className={styles.circleLength}>{listGenre.length}</div>
+            {selectItemFilter.genre.length > 0 && <div className={styles.circleLength}>{selectItemFilter.genre.length}</div>}
           </div>
           {DeleteFilter && <div onClick={() => DelFilter()} className={styles.filter__buttonFilter}>Cбросить фильтры</div>}
       </div>

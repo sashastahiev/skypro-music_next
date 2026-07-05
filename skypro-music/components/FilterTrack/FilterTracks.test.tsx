@@ -29,7 +29,7 @@ jest.mock('@/context/ThemeContext', () => ({
 
 // Мок скелетонов
 jest.mock('react-loading-skeleton', () => ({
-  SkeletonTheme: ({ children }: any) => <div>{children}</div>,
+  SkeletonTheme: ({ children }) => <div>{children}</div>,
 }));
 
 const mockTracks: TrackType[] = [
