@@ -23,7 +23,7 @@
   -ms-flex-pack: justify;
   justify-content: space-between;
   margin-bottom: 24px;
-  padding-right: 10px;
+  padding-right: 0px;
 }
 
 .content__playlist {
@@ -36,7 +36,7 @@
   -ms-flex-direction: column;
   flex-direction: column;
   overflow-y:scroll;
-  padding-right: 10px;
+  padding-right: 0px;
   &::-webkit-scrollbar {
     width: 4px;
   }
@@ -46,7 +46,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: white;
+    background-color: #B672FF;
   }
 }
 
@@ -58,6 +58,7 @@
   letter-spacing: 2px;
   color: #696969;
   text-transform: uppercase;
+  user-select: none;
 }
 
 .playlistTitle__svg {
@@ -84,6 +85,11 @@
   text-align: end;
   display: flex;
   justify-content: end;
+  padding-right: 25px;
+}
+.block4 {
+  width: 33px;
+  height: auto
 }
 
 .playlist__item {
@@ -91,10 +97,6 @@
   display: block;
   margin-bottom: 12px;
   cursor: pointer;
-}
-.playlist__item:hover{
-  background-color: #4e4e4e;
-  transition: 0.3s;
 }
 
 .playlist__track {
@@ -111,6 +113,10 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+}
+.playlist__track:hover {
+  transition: 300ms;
+  background-color: #cba6f3;
 }
 
 .track__title {
@@ -143,21 +149,25 @@
   -ms-flex-pack: center;
   justify-content: center;
   margin-right: 17px;
+  transition: 300ms;
 }
 
 .track__titleSvg {
-  width: 18px;
-  height: 17px;
+  width: 19px;
+  height: 18px;
   fill: transparent;
   stroke: #4e4e4e;
+  transition: 300ms;
 }
 
 .track__titleLink {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
+  transition: 300ms;
+  user-select: none;
 }
 
 .track__titleSpan {
@@ -166,6 +176,7 @@
   font-size: 16px;
   line-height: 24px;
   color: #4e4e4e;
+  user-select: none;
 }
 
 .track__author {
@@ -176,19 +187,22 @@
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  user-select: none;
 }
 
 .track__authorLink {
   font-style: normal;
-  font-weight: 400;
+  font-weight: 600;
   font-size: 16px;
   line-height: 24px;
   color: #ffffff;
   text-align: left;
+  transition: 300ms;
 }
 
 .track__album {
   width: 245px;
+  user-select: none;
 }
 
 .track__albumLink {
@@ -202,7 +216,7 @@
   display: flex;
 }
 .track__timeSvg {
-  width: 14px;
+  width: 16px;
   height: 24px;
   margin-right: 17px;
   fill: transparent;
@@ -216,6 +230,8 @@
   line-height: 24px;
   text-align: right;
   color: #696969;
+  padding-right: 25px;
+  user-select: none;
 }
 .pulsing_circle {
   position: absolute;
@@ -254,4 +270,22 @@
     transform: scale(0.9);
     opacity: 1;
   }
+}
+.loader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.loader_spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #fd00ce;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

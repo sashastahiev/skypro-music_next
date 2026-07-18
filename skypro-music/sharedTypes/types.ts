@@ -1,4 +1,5 @@
 export type TrackType = {
+    id: number | 0,
     _id: number,
     name: string,
     author: string,
@@ -10,4 +11,5 @@ export type TrackType = {
     track_file: string,
     stared_user: string[],
     isPlaying: boolean,
+    isLike: boolean,
 }

@@ -1,58 +1,213 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './FilterTracks.module.css';
-import { data } from '@/ts/data';
+import { TrackType } from '@/sharedTypes/types';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setPlaylistForFilter } from '@/store/features/trackSlice';
+import { useTheme } from '@/context/ThemeContext';
+
+type selectFilter = {
+  genre: string[],
+  release_date: string[],
+  author: string[]
+}
+
 export default function Filter() {
-  type BlockListState = "genre" | "author" | "year" | "none";
+  const { theme } = useTheme();
+  type BlockListState = "genre" | "author" | "release_date" | "sort" | "none";
+  const dispatch = useAppDispatch();
   const [blockList, setBlockList] = useState<BlockListState>("none");
+  const playlist: TrackType[] = useAppSelector((state) => state.tracks.Playlist);
+  const playlistFilter: TrackType[] = useAppSelector((state) => state.tracks.PlaylistForFilter)
+  const name: string | null = useAppSelector((state) => state.tracks.namePlaylist);
+  const [namePlaylist, setName] = useState<string | null>(null);
+  const [listGenre,setlistGenre] = useState<string[]>([]);
+  const [listAuthor, setlistAuthor] = useState<string[]>([]);
+  const [listYear, setlistYear] = useState<string[]>([]);
+  const [DeleteFilter,setDeleteFilter] = useState<boolean>(false);
+  const [sortName, setSortName] = useState<string>('названию');
+  let [selectItemFilter, setSelectItemFilter] = useState<selectFilter>({
+    genre: [],
+    release_date: [],
+    author: [],
+  });
+
+  const authorBlockRef = useRef<HTMLDivElement>(null);
+  const yearBlockRef = useRef<HTMLDivElement>(null);
+  const genreBlockRef = useRef<HTMLDivElement>(null);
+  const sortBlockRef = useRef<HTMLDivElement>(null);
+  const authorButtonRef = useRef<HTMLDivElement>(null);
+  const yearButtonRef = useRef<HTMLDivElement>(null);
+  const genreButtonRef = useRef<HTMLDivElement>(null);
+  const sortButtonRef = useRef<HTMLDivElement>(null);
+
   const changeBlockList = (state: BlockListState) => {
     if (state === blockList)
       setBlockList("none");
     else
       setBlockList(state);
   };
-  const [tracks,setTracks] = useState(data);
-  let listGenre: string[] = [...new Set(tracks.flatMap(track => track.genre))];
-  let listAuthor: string[] = [...new Set(tracks.map(track => track.author))];
-  let listYear: string[] = [...new Set(tracks.map(track => track.release_date))];
+  const DelFilter = () => {
+    dispatch(setPlaylistForFilter(playlist));
+    setBlockList("none");
+    setDeleteFilter(false);
+    setSelectItemFilter((prev) => ({...prev,genre:[],author:[],release_date:[]}));
+  }
+  const setPlaylistWithFilter = async (filter: string, name: 'genre' | 'author' | 'release_date') => {
+    const currentValues = selectItemFilter[name];
+    let newValues: string[];
+    if (!currentValues.includes(filter))
+      newValues = [...currentValues, filter];
+    else 
+      newValues = currentValues.filter((v) => v !== filter);
+    const newSelectItemFilter = {
+      ...selectItemFilter,
+      [name]: newValues,
+    };
+    let tracksWithFilter: TrackType[];
+    if (name === 'author' || name === 'release_date') {
+      tracksWithFilter = playlist.filter((item) =>
+        newValues.includes(item[name])
+      );
+    } else {
+      tracksWithFilter = playlist.filter((item) =>
+        item.genre.some((g) => newValues.includes(g))
+      );
+    }
+    tracksWithFilter = tracksWithFilter.map((item, index) => ({
+      ...item,
+      id: index,
+    }));
+    setSelectItemFilter(newSelectItemFilter);
+    await dispatch(setPlaylistForFilter(tracksWithFilter));
+    setDeleteFilter(true);
+  };
+  const setFilter = () => {
+    setlistGenre([...new Set(playlist.flatMap(track => track.genre))]);
+    setlistAuthor([...new Set(playlist.map(track => track.author))]);
+    setlistYear([...new Set(playlist.map(track => track.release_date))]);
+  }
+  const SortFilter = async (str: 'name' | 'album' | 'author', name: string) => {
+    let sortedItems: TrackType[] = [...playlistFilter];
+    sortedItems = sortedItems.sort((a, b) => a[str].localeCompare(b[str]));
+    let finalItems: TrackType[] = sortedItems.map((item, index) => ({
+      ...item,
+      id: index
+    }));
+    setSortName(name);
+    setDeleteFilter(true);
+    await dispatch(setPlaylistForFilter(finalItems));
+  }
+  useEffect(() => {
+    setName(name);
+    setFilter();
+  },[playlist])
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isOutside =
+        (!authorBlockRef.current || !authorBlockRef.current.contains(target)) &&
+        (!yearBlockRef.current || !yearBlockRef.current.contains(target)) &&
+        (!genreBlockRef.current || !genreBlockRef.current.contains(target)) &&
+        (!authorButtonRef.current || !authorButtonRef.current.contains(target)) &&
+        (!yearButtonRef.current || !yearButtonRef.current.contains(target)) &&
+        (!genreButtonRef.current || !genreButtonRef.current.contains(target)) &&
+        (!sortButtonRef.current || !sortButtonRef.current.contains(target)) && 
+        (!sortBlockRef.current || !sortBlockRef.current.contains(target));
+      if (isOutside) {
+        setBlockList("none");
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
   return (
     <>
-    <h2 className={styles.centerblock__h2}>Треки</h2>
-    <div className={styles.centerblock__filter}>
-        <div className={styles.filter__title}>Искать по:</div>
-        <div style={{position: 'relative', marginRight: '10px'}}>
-          <div onClick={() => changeBlockList("author")} className={styles.filter__button}>исполнителю</div>
-          {blockList === 'author' && 
-          <div className={styles.filter__block}>
-            <ul className={styles.filter__list}>
-              {listAuthor.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>}
-        </div>
-        <div style={{position: 'relative', marginRight: '10px'}}>
-          <div onClick={() => changeBlockList("year")} className={styles.filter__button}>году выпуска</div>
-          {blockList === 'year' && 
-          <div  className={styles.filter__block}>
-            <ul className={styles.filter__list}>
-              {listYear.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>}
-        </div>
-        <div style={{position: 'relative'}}>
-          <div onClick={() => changeBlockList("genre")} className={styles.filter__button}>жанру</div>
-          {blockList === 'genre' && 
-          <div  className={styles.filter__block}>
-            <ul className={styles.filter__list}>
-              {listGenre.map((item) => (
-                <li className={styles.itemList} key={item}>{item}</li>
-              ))}
-            </ul>
-          </div>}
-        </div>
+    <h2 style={{color: theme === 'light' ? 'black' : ''}} className={styles.centerblock__h2}>{namePlaylist}</h2>
+    <div className={styles.filter_ChangePlaylist}>
+      <div className={styles.centerblock__filter}>
+        <div style={{color: theme === 'light' ? 'black' : ''}}  className={styles.filter__title}>Искать по:</div>
+          <div style={{position: 'relative', marginRight: '10px'}}>
+            <div ref={authorButtonRef} style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
+              onClick={() => changeBlockList("author")} className={styles.filter__button}>
+              исполнителю
+              <div className={styles.shine}></div>
+            </div>
+            {blockList === 'author' && 
+            <div ref={authorBlockRef} style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
+              <ul className={styles.filter__list}>
+                {listAuthor.map((item) => (
+                  <li onClick={() => setPlaylistWithFilter(item, 'author')} 
+                  className={styles.itemList} 
+                  style={{backgroundColor: selectItemFilter.author.includes(item) ? "#201f1f" : ''}}
+                  key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>}
+            {selectItemFilter.author.length > 0 && <div className={styles.circleLength}>{selectItemFilter.author.length}</div>}
+          </div>
+          <div style={{position: 'relative', marginRight: '10px'}}>
+            <div ref={genreButtonRef} style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}}  
+              onClick={() => changeBlockList("release_date")} className={styles.filter__button}>году выпуска</div>
+            {blockList === 'release_date' && 
+            <div ref={genreBlockRef} style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
+              <ul className={styles.filter__list}>
+                {listYear.map((item) => (
+                  <li onClick={() => setPlaylistWithFilter(item, 'release_date')} 
+                  className={styles.itemList} 
+                  style={{backgroundColor: selectItemFilter.release_date.includes(item) ? "#201f1f" : ''}}
+                  key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>}
+            {selectItemFilter.release_date.length > 0 && <div className={styles.circleLength}>{selectItemFilter.release_date.length}</div>}
+          </div>
+          <div style={{position: 'relative'}}>
+            <div ref={yearButtonRef} style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
+              onClick={() => changeBlockList("genre")} className={styles.filter__button}>жанру</div>
+            {blockList === 'genre' && 
+            <div ref={yearBlockRef} style={{backgroundColor: theme === 'light' ? '#c9c9c9' : ''}} className={styles.filter__block}>
+              <ul className={styles.filter__list}>
+                {listGenre.map((item) => (
+                  <li onClick={() => setPlaylistWithFilter(item, 'genre')} 
+                  className={styles.itemList}
+                  style={{backgroundColor: selectItemFilter.genre.includes(item) ? "#201f1f" : ''}}
+                  key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>}
+            {selectItemFilter.genre.length > 0 && <div className={styles.circleLength}>{selectItemFilter.genre.length}</div>}
+          </div>
+          {DeleteFilter && <div onClick={() => DelFilter()} className={styles.filter__buttonFilter}>Cбросить фильтры</div>}
+      </div>
+      <div className={styles.filter_Sort}>
+        <div style={{color: theme === 'light' ? 'black' : ''}}  className={styles.filter__title}>Сортировка по:</div>
+        <div 
+          ref={sortButtonRef}
+          style={{color: theme === 'light' ? 'black' : '', border: theme === 'light' ? '1px solid black' : ''}} 
+          className={styles.filter__button}
+          onClick={() => changeBlockList("sort")}>{sortName}</div>
+          {blockList === 'sort' && 
+          <div 
+          ref={sortBlockRef} 
+          style={{backgroundColor: theme === 'light' ? '#c9c9c9' : '', marginTop:'48px', right:'0'}} 
+          className={styles.filter__block}>
+            <div className={styles.filter__list}>
+                <div onClick={() => SortFilter('name', 'названию')} className={styles.itemList}>
+                  названию
+                </div>
+                <div onClick={() => SortFilter('album', 'альбому')} className={styles.itemList}>
+                  альбому
+                </div>
+                <div onClick={() => SortFilter('author', 'исполнителю')} className={styles.itemList}>
+                  исполнителю
+                </div>
+            </div>
+          </div>
+          }
+      </div>
     </div>
     </>
   );

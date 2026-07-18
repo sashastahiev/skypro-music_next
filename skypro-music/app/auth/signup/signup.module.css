@@ -135,6 +135,10 @@
     letter-spacing: -0.05px;
 }
 
+.login {
+    margin-bottom: 30px;
+}
+
 .errorContainer {
     display: flex;
     flex-direction: column;

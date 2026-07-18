@@ -17,33 +17,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "baseUrl":".",
     "paths": {
       "@/*": [
         "./*"
       ],
-      "@/sharedTypes/*": [
-        "./sharedTypes/*"
-      ]
     }
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "jest.setup.ts", 
-    "components/Sibebar/Sibebar.test.tsx", 
-    "jest.config.js"],
+    "**/*.tsx"],
   "exclude": [
     "node_modules",
-    "dist"
   ]
 }

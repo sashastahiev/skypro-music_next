@@ -1,23 +1,26 @@
 import { useAppSelector } from '@/store/store'
 import styles from './Track.module.css'
+import { useTheme } from '@/context/ThemeContext'
 export default function Track() {
     const currentTrack = useAppSelector((state) => state.tracks.currentTrack)
+    const { theme } = useTheme();
   return (
     <div className={styles.trackPlay__contain}>
-        <div className={styles.trackPlay__image}>
+        <div style={{backgroundColor: theme === 'light' ? '#F6F4F4' : ''}} className={styles.trackPlay__image}>
             <svg className={styles.trackPlay__svg}>
-                <use xlinkHref="/image/icon/sprite.svg#icon-note"></use>
+                {theme === 'dark' ? <use xlinkHref="/image/icon/sprite.svg#icon-note"></use> : 
+                <use xlinkHref="/image/icon/noteLight.svg"></use> }
             </svg>
         </div>
         <div className={styles.trackPlay__author}>
-            <a className={styles.trackPlay__authorLink} href="">
+            <div style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__authorLink}>
                 {currentTrack?.author}
-            </a>
+            </div>
         </div>
         <div className={styles.trackPlay__album}>
-            <a className={styles.trackPlay__albumLink} href="">
+            <div style={{color: theme === 'light' ? 'black' : ''}} className={styles.trackPlay__albumLink}>
                 {currentTrack?.album}
-            </a>
+            </div>
         </div>
     </div>
   )

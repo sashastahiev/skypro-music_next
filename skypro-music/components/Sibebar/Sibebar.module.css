@@ -1,6 +1,8 @@
 .main__sidebar {
   max-width: 418px;
   padding: 20px 90px 20px 78px;
+  height: 100vh;
+  transition: 300ms;
 }
 .sidebar__personal {
   display: -webkit-box;
@@ -26,6 +28,8 @@
   line-height: 24px;
   color: #ffffff;
   margin-right: 16px;
+  transition: 300ms;
+  user-select: none;
 }
 
 .sidebar__icon {
